@@ -1,8 +1,9 @@
 ﻿# =============================================================================
-#  deploy.ps1  --  pull from GitHub (over SSH, because github.com:443 is blocked
-#                 on this host, but github.com:22 works) and sync into live dirs
+#  deploy.ps1  --  pull from GitHub (over SSH) -> sync into live folders
+#                  -> regenerate the client update manifest
+#                  -> auto hot-reload changed server Lua scripts
 #
-#  Repo layout (single source for the 144 dual-end files -> copied to BOTH ends):
+#  Repo layout (single source for the dual-end tables -> copied to BOTH ends):
 #     shared/scp/        -> D:\YXDServer\server\Server1\Scp  AND  D:\YXDClient\Data\Scp
 #     server/lua/        -> D:\YXDServer\server\Server1\Scp\Lua
 #     client/extra/      -> D:\YXDClient\Data\Scp
@@ -10,9 +11,13 @@
 #
 #  Rules: robocopy /E only (NEVER /MIR -- it would delete the client packages
 #         and images that are not stored in git).  scp.txt is regenerated LAST.
+#  NOTE : must run in the same interactive session as GameServer for the Lua
+#         hot-reload step to work (i.e. run the task as Administrator/Interactive,
+#         not as SYSTEM).
 # =============================================================================
 param(
-    [switch]$Restart      # also restart the game server (kicks online players)
+    [switch]$Restart,        # restart the game server after syncing
+    [switch]$NoHotUpdate     # skip the automatic Lua hot-reload
 )
 
 $ErrorActionPreference = 'Continue'
@@ -29,10 +34,11 @@ $SrvScp     = 'D:\YXDServer\server\Server1\Scp'
 $CliScp     = 'D:\YXDClient\Data\Scp'
 $PubRoot    = 'C:\ShareFiles'
 $RestartBat = 'D:\YXDServer\[2]一键启动.bat'
+$StopBat    = 'D:\YXDServer\[99]一键停止.bat'
+$HotUpdate  = 'D:\deploy\hot_update.ps1'
 # ----------------------------------------------------------------------------
 
 $env:GIT_SSH_COMMAND = "ssh -i `"$SshKey`" -o UserKnownHostsFile=`"$Known`" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
-# git 可能不在 PATH（计划任务以 SYSTEM 运行时尤其如此）→ 用绝对路径
 $Git = 'C:\Program Files\Git\cmd\git.exe'
 if (-not (Test-Path $Git)) { $Git = 'git' }
 $env:Path = 'C:\Program Files\Git\cmd;' + $env:Path
@@ -45,51 +51,66 @@ function Log($m) {
 
 $logDir = Split-Path $LogFile
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Force -Path $logDir | Out-Null }
+& $Git config --global safe.directory '*' | Out-Null
 
-# 0) 安全目录（计划任务以 SYSTEM 运行时用；一次性设置，不重复追加）
-& $Git config --global safe.directory '*'
-
-# 1) fetch / pull
+# ---------------- 1) fetch / pull ----------------
+$oldSha = $null
+$newSha = $null
 if (-not (Test-Path (Join-Path $RepoDir '.git'))) {
     Log "clone $RepoUrl ($Branch)"
     & $Git clone -b $Branch $RepoUrl $RepoDir
     if ($LASTEXITCODE -ne 0) { Log 'clone failed'; exit 1 }
+    Log '[note] fresh clone -> no hot-reload (restart the server or reload manually)'
 } else {
     & $Git -C $RepoDir remote set-url origin $RepoUrl
     $fetch = & $Git -C $RepoDir fetch origin $Branch 2>&1
     if ($LASTEXITCODE -ne 0) { Log ("fetch failed: " + ($fetch -join ' ')); exit 1 }
-    $local  = (& $Git -C $RepoDir rev-parse HEAD 2>$null)
-    $remote = (& $Git -C $RepoDir rev-parse "origin/$Branch" 2>$null)
-    if ($local -eq $remote) { exit 0 }
-    Log "changes: $local -> $remote"
+    $oldSha = (& $Git -C $RepoDir rev-parse HEAD 2>$null)
+    $newSha = (& $Git -C $RepoDir rev-parse "origin/$Branch" 2>$null)
+    if ($oldSha -eq $newSha) { exit 0 }
+    Log "changes: $oldSha -> $newSha"
     & $Git -C $RepoDir reset --hard "origin/$Branch" | Out-Null
+}
+
+# ---------------- 2) which files changed? ----------------
+$luaFiles = @()
+$tblChanged = @()
+if ($oldSha -and $newSha -and ($oldSha -ne $newSha)) {
+    $changed = & $Git -C $RepoDir diff --name-only $oldSha $newSha 2>$null
+    foreach ($c in $changed) {
+        $c = ($c -replace "`r", '').Trim()
+        if ($c -like 'server/lua/*') {
+            $rel = $c.Substring('server/lua/'.Length).Replace('/', '\')
+            $luaFiles += (Join-Path (Join-Path $SrvScp 'Lua') $rel)
+        } elseif ($c -like 'shared/scp/*') {
+            $tblChanged += $c.Substring('shared/scp/'.Length)
+        }
+    }
 }
 
 function Sync($src, $dst, $what) {
     if (-not (Test-Path -LiteralPath $src)) { Log "[skip] repo folder missing: $src"; return }
     if (-not (Test-Path -LiteralPath $dst)) { Log "[skip] live folder missing: $dst"; return }
-    # /XF .gitkeep —— 别把 git 占位文件同步进线上目录（会让 scp.txt 的 bb 白变）
+    # /XF .gitkeep -- keep git placeholder files out of the live folders
+    # (a stray file in the client dir would change scp.txt's bb for nothing)
     robocopy $src $dst /E /NFL /NDL /NJH /NJS /NP /R:2 /W:1 /XD .git /XF *.log .gitkeep | Out-Null
     Log "[sync] $what : $src -> $dst"
 }
 
-# 2) sync
+# ---------------- 3) sync ----------------
 Sync "$RepoDir\shared\scp"     $SrvScp  'dual-end -> server'
 Sync "$RepoDir\shared\scp"     $CliScp  'dual-end -> client'
 Sync "$RepoDir\server\lua"     (Join-Path $SrvScp 'Lua') 'server lua'
 Sync "$RepoDir\client\extra"   $CliScp  'client-only'
 Sync "$RepoDir\publish-static" $PubRoot 'publish files'
 
-# 3) 重新生成 scp.txt（必须最后做；start.bat 扫的是客户端工程目录）
-#    ★坑：start.bat 结尾有 pause，计划任务里没有 stdin 会永久卡住 →
-#      重定向 < NUL，并加超时兜底。
+# ---------------- 4) regenerate scp.txt (LAST; start.bat scans the client dir) ----------
 $startBat = Join-Path $PubRoot 'start.bat'
 if (Test-Path -LiteralPath $startBat) {
     Log '[manifest] regenerating scp.txt'
-    # ★坑：start.bat 结尾有 pause（等按键）。必须重定向 stdin 并送一个空行，
-    #   否则计划任务里无 stdin 会永久卡住（把任务占死）。
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = 'cmd.exe'
+    # cmd /c quoting: the whole command needs one extra layer of quotes
     $psi.Arguments = '/c ""' + $startBat + '" "' + $CliScp + '""'
     $psi.UseShellExecute = $false
     $psi.RedirectStandardInput = $true
@@ -97,7 +118,7 @@ if (Test-Path -LiteralPath $startBat) {
     $psi.CreateNoWindow = $true
     try {
         $proc = [System.Diagnostics.Process]::Start($psi)
-        $proc.StandardInput.WriteLine('')
+        $proc.StandardInput.WriteLine('')     # feed start.bat's trailing "pause"
         $proc.StandardInput.Close()
         if (-not $proc.WaitForExit(180000)) {
             try { $proc.Kill() } catch {}
@@ -105,21 +126,45 @@ if (Test-Path -LiteralPath $startBat) {
         } else {
             Log ('[manifest] start.bat exit=' + $proc.ExitCode)
         }
-    } catch {
-        Log ('[manifest] start.bat failed: ' + $_.Exception.Message)
-    }
+    } catch { Log ('[manifest] start.bat failed: ' + $_.Exception.Message) }
 } else {
     Log '[manifest] start.bat not found, skipped'
 }
 
-# 4) 可选重启
-if ($Restart) {
-    if (Test-Path -LiteralPath $RestartBat) {
-        Log '[restart] running game server start script'
-        Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', "`"$RestartBat`""
-    } else { Log '[restart] start script not found' }
+# ---------------- 5) auto hot-reload changed Lua ----------------
+if ($luaFiles.Count -gt 0) {
+    if ($NoHotUpdate) {
+        Log ('[hotupdate] skipped (-NoHotUpdate); changed: ' + ($luaFiles -join ', '))
+    } elseif (-not (Test-Path -LiteralPath $HotUpdate)) {
+        Log ('[hotupdate] tool missing: ' + $HotUpdate)
+    } else {
+        Log ('[hotupdate] reloading ' + $luaFiles.Count + ' lua file(s)')
+        $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $HotUpdate @luaFiles 2>&1
+        foreach ($o in $out) { Log ('[hotupdate] ' + $o) }
+        Log ('[hotupdate] exit=' + $LASTEXITCODE)
+    }
 } else {
-    Log '[note] tables need the in-game "browse + update"; Lua needs "script update"'
+    Log '[hotupdate] no lua changes'
+}
+
+# ---------------- 6) tables changed? ----------------
+if ($tblChanged.Count -gt 0) {
+    Log ('[tables] changed (' + $tblChanged.Count + '): ' + (($tblChanged | Select-Object -First 8) -join ', '))
+    if ($Restart) { Log '[tables] -Restart given -> server will be restarted below' }
+    else { Log '[tables] ACTION NEEDED: reload tables in the server UI (or restart the server)' }
+}
+
+# ---------------- 7) optional restart ----------------
+if ($Restart) {
+    if ((Test-Path -LiteralPath $StopBat) -and (Test-Path -LiteralPath $RestartBat)) {
+        Log '[restart] stopping server'
+        cmd /c "`"$StopBat`"" | Out-Null
+        Start-Sleep -Seconds 6
+        Log '[restart] starting server'
+        Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', "`"$RestartBat`""
+    } else {
+        Log '[restart] start/stop script not found -- restart manually'
+    }
 }
 
 Log 'deploy done'
