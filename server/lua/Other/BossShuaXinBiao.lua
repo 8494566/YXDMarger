@@ -360,3 +360,5 @@ function GmZhuShouDaShiDianJi()
 	API_Trace('GmZhuShouDaShiDianJi 进入 -> 打开 BOSS刷新表')
 	BossShuaXinBiao_Show()
 end
+
+-- [auto-reload-test] 2026-09-28 auto reload test
