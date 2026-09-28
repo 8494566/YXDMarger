@@ -46,7 +46,7 @@ function GuXianLu_Title()
 	API_ResponseWrite('<text size="14">　· 每层刷新一只「幻影」，<text color="255,128,0">实力每层 ×1.1（复利）</text></text><br>')
 	API_ResponseWrite('<text size="14">　· 击杀第 N 层可得 <text color="0,255,0">N 个「古仙令」</text>（邮件发放）</text><br>')
 	API_ResponseWrite('<text size="14">　· <text color="255,0,0">每天只能进一次</text>；<text color="255,0,0">组队不能进</text>；死亡或通关即结束</text><br>')
-	API_ResponseWrite('<text size="14">　· 每 </text><text size="14" color="255,255,0">3000</text><text size="14"> 个「古仙令」可在本卷轴兑换界面换一件好礼</text><br><br>')
+	API_ResponseWrite('<text size="14">　· 每 </text><text size="14" color="255,255,0">500</text><text size="14"> 个「古仙令」可在本卷轴兑换界面换一件好礼</text><br><br>')
 	if GuXianLu_UsedToday(ActorID) then
 		API_ResponseWrite('<text size="14" color="255,0,0">你今天已经挑战过古仙路了，明天再来吧！</text><br><br>')
 	elseif GuXianLu_IsInTeam(ActorID) then
