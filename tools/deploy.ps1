@@ -104,6 +104,46 @@ Sync "$RepoDir\server\lua"     (Join-Path $SrvScp 'Lua') 'server lua'
 Sync "$RepoDir\client\extra"   $CliScp  'client-only'
 Sync "$RepoDir\publish-static" $PubRoot 'publish files'
 
+# ---------------- 3.5) ★把客户端工程复制到发布站（客户端从这里下载！）----------------
+# 漏了这一步 = 清单已更新但发布站还是旧文件 -> 客户端校验不过 -> 无限断点续传
+$PubScp = Join-Path $PubRoot 'scp'
+if (Test-Path -LiteralPath $CliScp) {
+    robocopy $CliScp $PubScp /E /NFL /NDL /NJH /NJS /NP /R:2 /W:1 /XF scp.txt *.log .gitkeep | Out-Null
+    Log "[publish] client scp -> $PubScp"
+} else {
+    Log '[publish] client scp dir missing, skipped'
+}
+# 图片：客户端 Data\Res -> 发布站 res（有才拷；拷完要重生成 res.txt）
+$CliRes = Join-Path $CliScp '..\Res'
+$PubRes = Join-Path $PubRoot 'res'
+if ((Test-Path -LiteralPath $CliRes) -and (Test-Path -LiteralPath $PubRes)) {
+    $r1 = robocopy $CliRes $PubRes /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1 /XF res.txt *.log
+    $rc1 = $LASTEXITCODE
+    if ($rc1 -ge 8) { Log ("[publish] res copy FAILED rc=$rc1") }
+    elseif ($rc1 -gt 1) {
+        Log '[publish] res changed -> regenerating res.txt'
+        $resBat = Join-Path $PubRoot 'start_res.bat'
+        if (Test-Path -LiteralPath $resBat) {
+            $ps2 = New-Object System.Diagnostics.ProcessStartInfo
+            $ps2.FileName = 'cmd.exe'
+            $ps2.Arguments = '/c ""' + $resBat + '""'
+            $ps2.UseShellExecute = $false
+            $ps2.RedirectStandardInput = $true
+            $ps2.RedirectStandardOutput = $true
+            $ps2.CreateNoWindow = $true
+            try {
+                $p2 = [System.Diagnostics.Process]::Start($ps2)
+                $p2.StandardInput.WriteLine('')
+                $p2.StandardInput.Close()
+                if (-not $p2.WaitForExit(180000)) { try { $p2.Kill() } catch {} ; Log '[publish] res.txt TIMEOUT' }
+                else { Log ('[publish] res.txt exit=' + $p2.ExitCode) }
+            } catch { Log ('[publish] res.txt failed: ' + $_.Exception.Message) }
+        }
+    } else {
+        Log '[publish] res unchanged'
+    }
+}
+
 # ---------------- 4) regenerate scp.txt (LAST; start.bat scans the client dir) ----------
 $startBat = Join-Path $PubRoot 'start.bat'
 if (Test-Path -LiteralPath $startBat) {
