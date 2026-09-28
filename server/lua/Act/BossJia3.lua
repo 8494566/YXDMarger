@@ -5,9 +5,10 @@ if BossJia3BossTab == nil then
 end
 
 
-BossJia3_TimeHD = BossJia3_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'BossJia3_TimeFunc')
+--[已停用] BossJia3_TimeHD = BossJia3_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'BossJia3_TimeFunc')
 
 function BossJia3_TimeFunc(a,b)
+	if true then return end --已停用：八门/五行/冰雪改走 BossLunHuan 轮换
 	local Year,Month,Day,Hour,Minute,Second,Week = PublicFun_time()
     if Hour == 0 or Hour == 4 or Hour == 8 or Hour == 12  or Hour == 16 or Hour == 20  or Hour == 24  then
 		if  Minute == 0 then

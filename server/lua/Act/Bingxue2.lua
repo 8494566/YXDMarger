@@ -9,9 +9,10 @@ if Bingxue2BossTab == nil then
 end
 
 
-Bingxue2_TimeHD = Bingxue2_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'Bingxue2_TimeFunc')
+--[已停用] Bingxue2_TimeHD = Bingxue2_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'Bingxue2_TimeFunc')
 
 function Bingxue2_TimeFunc(a,b)
+	if true then return end --已停用：八门/五行/冰雪改走 BossLunHuan 轮换
 	local Year,Month,Day,Hour,Minute,Second,Week = PublicFun_time()
     if Hour == 21 or Hour == 7  then
 		if  Minute == 05 then

@@ -10,9 +10,10 @@ if Shouhu1BossTab == nil then
 end
 
 
-Shouhu1_TimeHD = Shouhu1_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'Shouhu1_TimeFunc')
+--[已停用] Shouhu1_TimeHD = Shouhu1_TimeHD or API_CreateTimerTriggerG(0,0,60,-1,'Shouhu1_TimeFunc')
 
 function Shouhu1_TimeFunc(a,b)
+	if true then return end --已停用：八门/五行/冰雪改走 BossLunHuan 轮换
 	local Year,Month,Day,Hour,Minute,Second,Week = PublicFun_time()
     if Hour == 20 then
 		if  Minute == 00 then
