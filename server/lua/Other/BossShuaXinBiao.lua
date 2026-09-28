@@ -10,6 +10,7 @@ BossShuaXinBiao_LvMaxBingXue = 25
 BossShuaXinBiao_LvMaxTaFu    = 25
 BossShuaXinBiao_CDSec        = 300
 BossShuaXinBiao_PageMax      = 4
+BossShuaXinBiao_VER          = '2026-09-28-split4p'   -- 版本标记
 
 function BossShuaXinBiao_Fmt(s)
 	if s == nil or s < 0 then s = 0 end
@@ -254,6 +255,7 @@ function BossShuaXinBiao_Build(page)
 end
 
 function BossShuaXinBiao_Show()
+	API_Trace('BossShuaXinBiao_Show 进入 VER='..tostring(BossShuaXinBiao_VER))
 	local page = API_RequestGetNumber(1)
 	local ok, res = pcall(BossShuaXinBiao_Build, page)
 	if ok then
