@@ -17,7 +17,10 @@
 # =============================================================================
 param(
     [switch]$Restart,        # restart the game server after syncing
-    [switch]$NoHotUpdate     # skip the automatic Lua hot-reload
+    [switch]$NoHotUpdate,     # skip the automatic Lua hot-reload
+    [switch]$PublishRes       # also publish client Data\Res -> C:\ShareFiles\res + res.txt
+                              # (images are not in git; this step is slow because res.txt hashes
+                              #  the whole res folder, so it is OPT-IN)
 )
 
 $ErrorActionPreference = 'Continue'
@@ -51,7 +54,7 @@ function Log($m) {
 
 $logDir = Split-Path $LogFile
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Force -Path $logDir | Out-Null }
-& $Git config --global safe.directory '*' | Out-Null
+& $Git config --global --replace-all safe.directory '*' | Out-Null
 
 # ---------------- 1) fetch / pull ----------------
 $oldSha = $null
@@ -113,15 +116,13 @@ if (Test-Path -LiteralPath $CliScp) {
 } else {
     Log '[publish] client scp dir missing, skipped'
 }
-# 图片：客户端 Data\Res -> 发布站 res（有才拷；拷完要重生成 res.txt）
-$CliRes = Join-Path $CliScp '..\Res'
-$PubRes = Join-Path $PubRoot 'res'
-if ((Test-Path -LiteralPath $CliRes) -and (Test-Path -LiteralPath $PubRes)) {
-    $r1 = robocopy $CliRes $PubRes /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1 /XF res.txt *.log
-    $rc1 = $LASTEXITCODE
-    if ($rc1 -ge 8) { Log ("[publish] res copy FAILED rc=$rc1") }
-    elseif ($rc1 -gt 1) {
-        Log '[publish] res changed -> regenerating res.txt'
+# 图片：客户端 Data\Res -> 发布站 res（仅 -PublishRes 时执行；res.txt 要 hash 整个 res 目录，很慢，默认不做）
+if ($PublishRes) {
+    $CliRes = Join-Path $CliScp '..\Res'
+    $PubRes = Join-Path $PubRoot 'res'
+    if ((Test-Path -LiteralPath $CliRes) -and (Test-Path -LiteralPath $PubRes)) {
+        robocopy $CliRes $PubRes /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1 /XF res.txt *.log | Out-Null
+        Log '[publish] res copied (opt-in)'
         $resBat = Join-Path $PubRoot 'start_res.bat'
         if (Test-Path -LiteralPath $resBat) {
             $ps2 = New-Object System.Diagnostics.ProcessStartInfo
@@ -135,13 +136,17 @@ if ((Test-Path -LiteralPath $CliRes) -and (Test-Path -LiteralPath $PubRes)) {
                 $p2 = [System.Diagnostics.Process]::Start($ps2)
                 $p2.StandardInput.WriteLine('')
                 $p2.StandardInput.Close()
-                if (-not $p2.WaitForExit(180000)) { try { $p2.Kill() } catch {} ; Log '[publish] res.txt TIMEOUT' }
-                else { Log ('[publish] res.txt exit=' + $p2.ExitCode) }
+                if (-not $p2.WaitForExit(600000)) {
+                    try { $p2.Kill() } catch {}
+                    Log '[publish] res.txt TIMEOUT (>10min) -> killed (check for orphan powershell processes)'
+                } else { Log ('[publish] res.txt exit=' + $p2.ExitCode) }
             } catch { Log ('[publish] res.txt failed: ' + $_.Exception.Message) }
         }
     } else {
-        Log '[publish] res unchanged'
+        Log '[publish] res dir missing, skipped'
     }
+} else {
+    Log '[publish] res skipped (use -PublishRes when images changed)'
 }
 
 # ---------------- 4) regenerate scp.txt (LAST; start.bat scans the client dir) ----------

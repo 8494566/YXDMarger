@@ -70,10 +70,27 @@ $edit = [HU]::GetDlgItem($dlg, $editId)
 $btn  = [HU]::GetDlgItem($dlg, $btnId)
 $lp   = [IntPtr](5 -bor (5 -shl 16))
 
+$Checker = 'D:\deploy\lua_check.ps1'
 $fail = 0
 foreach ($f in $Files) {
     if (-not $f) { continue }
     if (-not (Test-Path -LiteralPath $f)) { Write-Output ('SKIP (missing): ' + $f); $fail++; continue }
+
+    # ---- 保险 1：语法预检（没有 Lua 解释器，用启发式；重点拦 ",," 这种必错）----
+    if (Test-Path -LiteralPath $Checker) {
+        $ck = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Checker $f 2>&1
+        $ckText = ($ck -join ' ')
+        if ($LASTEXITCODE -ne 0) {
+            Write-Output ('REJECT (syntax check): ' + (Split-Path $f -Leaf) + '  -> ' + $ckText)
+            $fail++
+            continue
+        }
+    }
+
+    # ---- 保险 2：热更前备份，失败自动回滚 ----
+    $bak = $f + '.hotupdate.bak'
+    Copy-Item -LiteralPath $f -Destination $bak -Force
+
     $before = (Get-Item $LogFile).Length
     [HU]::SetForegroundWindow($dlg) | Out-Null
     Start-Sleep -Milliseconds 300
@@ -90,9 +107,26 @@ foreach ($f in $Files) {
     $leaf = Split-Path $f -Leaf
     if ($txt -match [regex]::Escape($leaf) -and $txt -match '成功') {
         Write-Output ('OK   ' + $leaf)
+        Remove-Item -LiteralPath $bak -Force -ErrorAction SilentlyContinue
     } else {
+        # 失败 -> 回滚到旧版本并重新加载
         Write-Output ('FAIL ' + $leaf + '  (log: ' + (($txt -split "`r?`n" | Where-Object { $_.Trim() -ne '' }) -join ' | ') + ')')
         $fail++
+        if (Test-Path -LiteralPath $bak) {
+            Copy-Item -LiteralPath $bak -Destination $f -Force
+            Write-Output ('ROLLBACK ' + $leaf + ' -> 已恢复旧版本，重新加载')
+            Start-Sleep -Milliseconds 500
+            [HU]::SetForegroundWindow($dlg) | Out-Null
+            [HU]::SendMessage($edit, 0x000C, [IntPtr]::Zero, $f) | Out-Null
+            Start-Sleep -Milliseconds 1000
+            [HU]::PostMessage($btn, 0x0201, [IntPtr]1, $lp) | Out-Null
+            Start-Sleep -Milliseconds 130
+            [HU]::PostMessage($btn, 0x0202, [IntPtr]0, $lp) | Out-Null
+            Start-Sleep -Seconds 3
+            $txt2 = Read-LogFrom $before
+            if ($txt2 -match '成功') { Write-Output ('ROLLBACK-OK ' + $leaf + ' 服务端已恢复到旧版本') }
+            else { Write-Output ('ROLLBACK-FAIL ' + $leaf + '  需要人工重启服务端！') }
+        }
     }
     Start-Sleep -Milliseconds 500
 }
