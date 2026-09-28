@@ -41,6 +41,12 @@ function BossShuaXinBiao_GameSecOfDay()
 	return H * 3600 + Mi * 60 + S
 end
 
+--轮换BOSS按服务器(真实)时钟走，这里给它一个独立显示
+function BossShuaXinBiao_ServerClock()
+	local t = os.date('*t', os.time())
+	return string.format('%02d:%02d:%02d', t.hour, t.min, t.sec)
+end
+
 --记录 游戏时钟 与 服务器时钟 的偏移（秒），写日志备查
 function BossShuaXinBiao_RecordOffset()
 	local _, _, _, H, Mi, S = PublicFun_time()
@@ -151,10 +157,7 @@ BossShuaXinBiao_Daily = {
 	{Name = '空间主宰曼德拉（空间领主）', Times = {{19,00}}, Mon = {850029}},
 	{Name = '雪岭巨兽卡罗斯',             Times = {{19,00}}, Mon = {850031}},
 	{Name = '年兽王',                     Times = {{19,00}}, Mon = {730603}},
-	{Name = '八门守护',                   Times = {{20,00}}, Mon = {943066,943067,943068,943069,943070,943071,943072,943073}},
-	{Name = '五行守护',                   Times = {{20,00}}, Mon = {943074,943075,943076,943077,943078}},
 	{Name = '天空城变异凶兽',             Times = {{20,30}}, Mon = {944065}},
-	{Name = '冰雪美人',                   Times = {{6,35},{22,35}}, Mon = {943079,943080,943081,943082,943083,943084}},
 }
 
 BossShuaXinBiao_World = {
@@ -190,21 +193,24 @@ function BossShuaXinBiao_Build(page)
 		elseif sec <= 0 then
 			return '已刷新'
 		else
-			return '还有 '..BossShuaXinBiao_Fmt(sec)
+			return '剩余 '..BossShuaXinBiao_Fmt(sec)
 		end
 	end
 
 	W('<name>BOSS刷新表</name>')
 	W('<win rect="80,200,830,420"></win>')
 	W('<br><text size="14">游戏时间：</text><text size="14" color="255,255,0">'..BossShuaXinBiao_GameTime()..'</text>')
+	W('<text size="14">　服务器时间：</text><text size="14" color="255,255,0">'..BossShuaXinBiao_ServerClock()..'</text><text size="14" color="200,200,200">（轮换BOSS按服务器时间）</text>')
 	W('<text size="14">　你的等级：</text><text size="14" color="0,255,255">'..Lv..'</text>')
 	W('<text size="14">　第 </text><text size="14" color="255,128,0">'..page..'</text><text size="14"> / '..BossShuaXinBiao_PageMax..' 页</text>')
 
 	if page == 1 then
 		--============ ① 轮换类 ============
 		if BossLunHuan_Table ~= nil and BossLunHuan_SlotSec ~= nil and BossLunHuan_SlotSec > 0 then
-			local slot = math.floor(os.time() / BossLunHuan_SlotSec)
+			local nowT = os.time()
+			local slot = math.floor(nowT / BossLunHuan_SlotSec)
 			local slotSec = BossLunHuan_SlotSec
+			local remainSec = slotSec - math.mod(nowT, slotSec)
 			local groups, order = {}, {}
 			for i = 1, table.getn(BossLunHuan_Table) do
 				local e = BossLunHuan_Table[i]
@@ -224,7 +230,11 @@ function BossShuaXinBiao_Build(page)
 					W('<br><text size="14" color="255,255,0">'..g..'</text>')
 					for k = 1, n do
 						local e = list[k]
-						local waitSec = math.mod(k - curIdx, n) * slotSec
+						local off = math.mod(k - curIdx, n)
+						local waitSec = 0
+						if off > 0 then
+							waitSec = remainSec + (off - 1) * slotSec
+						end
 						W('<br><text size="14">　· '..BossShuaXinBiao_MonName(e.Boss)..'（'..e.Name..'）'..BossShuaXinBiao_Pos(e.Boss)..' </text>'
 							..'<text size="14" color="0,255,0">'..CDText(waitSec)..'</text>'..BossShuaXinBiao_Link(e.Boss))
 					end
@@ -254,7 +264,7 @@ function BossShuaXinBiao_Build(page)
 					end
 				end
 				W('<br><text size="14">　· '..d.Name..'（'..table.getn(d.Mon)..'只） 每天 '..timeTxt..' </text>'
-					..'<text size="14" color="0,255,0">下次 '..bestTime..' 还有 '..BossShuaXinBiao_Fmt(best)..'</text>')
+					..'<text size="14" color="0,255,0">下次 '..bestTime..' 剩余 '..BossShuaXinBiao_Fmt(best)..'</text>')
 				for j = 1, table.getn(d.Mon) do
 					local mid = d.Mon[j]
 					if BossShuaXinBiao_CanShow(mid, Lv) then
@@ -288,7 +298,7 @@ function BossShuaXinBiao_Build(page)
 		end
 	end
 
-	W('<br><br><text size="14" color="200,200,200">（同一只BOSS '..(BossShuaXinBiao_CDSec / 60)..' 分钟内只能传送一次）</text><br>')
+	W('<br><br><text size="14" color="200,200,200">（同一只BOSS '..(BossShuaXinBiao_CDSec / 60)..' 分钟内只能传送一次；倒计时点【刷新】更新）</text><br>')
 	W('<a href="BossShuaXinBiao_Show?1=1">①轮换</a> <text> </text>')
 	W('<a href="BossShuaXinBiao_Show?1=2">②每日</a> <text> </text>')
 	W('<a href="BossShuaXinBiao_Show?1=3">③世界/地穴</a> <text> </text>')
