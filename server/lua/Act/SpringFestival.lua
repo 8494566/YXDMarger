@@ -3253,7 +3253,7 @@ XinNianLiWuDHG_Goods_Table = {
                         {GoodsID=911,Point=5000,Jiao=0},
                         {GoodsID=80687,Point=0,Jiao=10},
 			{GoodsID=80688,Point=0,Jiao=10},
-                     {GoodsID=89196,Point=0,Jiao=20},
+                     {GoodsID=89196,Point=0,Jiao=1},
                      {GoodsID=89001,Point=0,Jiao=40},   --六星魂器宝箱(龙鳞翻倍)
                      {GoodsID=89247,Point=0,Jiao=50},   --新英雄技能书
                      {GoodsID=89248,Point=0,Jiao=50},   --新英雄技能书
