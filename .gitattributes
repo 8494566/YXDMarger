@@ -1,0 +1,3 @@
+# 一律禁止换行转换：服务端 Lua 是 GBK 文本、.cse/.res 是加密二进制，
+# 任何 autocrlf / eol 转换都会毁掉文件。
+* -text

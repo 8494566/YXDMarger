@@ -1,0 +1,635 @@
+----------------------------------------------------------------------------------------------------------------------
+--文件名:	scp\Lua\Other\MeiRiRW.lua
+--版  权:	(C)  深圳网域计算机网络有限公司
+--创建人:	陈信宇
+--日  期:	2008-10-09
+--版  本:	1.0
+--描  述:	每日战斗表彰
+--应  用:  
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+
+
+--任务ID
+MeiRiRWTaskIDLJ = 151
+
+MeiRiRWTaskIDZD = 152
+
+MeiRiRWTaskIDFS = 153
+
+MeiRiRWTaskIDTF = 154
+
+MeiRiRWTaskIDXLY = 155
+
+--交互数据
+LJLingJiangTime = 3751
+
+ZDLingJiangTime = 3752
+
+FSLingJiangTime = 3753
+
+TFLingJiangTime = 3754
+
+XLYLingJiangTime = 3755
+
+--上线掉落卷轴提示
+function MeiRiRW_TiShiJuanZhou()
+--	local ActorID = API_RequestGetActorID()
+--	local DJ = API_GetActorPeerageLevel(ActorID)
+--	local ScrollID = 50001
+--	local Icon = 104087
+--	if DJ < 8 then
+--		API_RemoveTaskScroll(ActorID,ScrollID)
+--		API_AddTaskScrollEx(ActorID,ScrollID,Icon,'MeiRiRW_TiShiXinXi',0)
+--	end
+end
+
+--卷轴提示内容	
+function MeiRiRW_TiShiXinXi()
+--	local ActorID = API_RequestGetActorID()
+--	local ScrollID = 50001
+--	API_ResponseWrite('<name>总督</name>')
+--	API_ResponseWrite('<text>总督提醒您：</text><br><br>')
+--	API_ResponseWrite('<text>每天可以领取战斗奖励，不要错过哦，如果您还不知道的话，请抽空去总督那了解“每日战斗表彰”相关内容。</text><br><br>')
+--	API_ResponseWrite('<a>知道了</a>')
+--	API_RemoveTaskScroll(ActorID,ScrollID)
+end
+
+--奖励表
+MeiRiRW_JiangLiTable = {
+[1] = {JinShiZiGoodsID = 80294,SJMoHeGoodsID = 80381,JinDunGoodsID = 80330,RunHuaJiGoodsID = 80191,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = 80233,TiLianMoHeGoodsID = nil,JLMiaoShu1 = '获得公民金十字胜利勋章×1',JLMiaoShu2 = '获得劣质升级魔盒×1',JLMiaoShu3 = '获得公民金盾勇气勋章×1',JLMiaoShu4 = '获得劣质润滑剂×2',JLMiaoShu5 = '获得劣质宝石合成剂×1',JLMiaoShu6 = '获得低档土地契约×1',JLMiaoShu7 = nil,JLMiaoShu8 = nil,LJJLMoney = 9015,ZDJLMoney = 2385,XLYJLMoney = nil,FSJLGongXun = 8160,TFJLGongXun = 8160,XLYJLGongXun = nil,LJJLSW = 6,LJFKDJLSW = 46,ZDJLSW = 2,ZDFKDJLSW = 13,FSJLSW = 2,FSFKDJLSW = 22,TFJLSW = 2,TFFKDJLSW = 22,ShengJiHeZiNum = 1,RunHuaJiNum = 2,BaoShiHeChengJiNum = 1,},
+[2] = {JinShiZiGoodsID = 80298,SJMoHeGoodsID = 80381,JinDunGoodsID = 80334,RunHuaJiGoodsID = 80191,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = 80233,TiLianMoHeGoodsID = nil,JLMiaoShu1 = '获得男爵金十字胜利勋章×1',JLMiaoShu2 = '获得劣质升级魔盒×2',JLMiaoShu3 = '获得男爵金盾勇气勋章×1',JLMiaoShu4 = '获得劣质润滑剂×3',JLMiaoShu5 = '获得劣质宝石合成剂×1',JLMiaoShu6 = '获得低档土地契约×1',JLMiaoShu7 = nil,JLMiaoShu8 = nil,LJJLMoney = 10968,ZDJLMoney = 2700,XLYJLMoney = 1300,FSJLGongXun = 22320,TFJLGongXun = 10200,XLYJLGongXun = 11160,LJJLSW = 13,LJFKDJLSW = 92,ZDJLSW = 4,ZDFKDJLSW = 27,FSJLSW = 4,FSFKDJLSW = 44,TFJLSW = 4,TFFKDJLSW = 44,ShengJiHeZiNum = 2,RunHuaJiNum = 3,BaoShiHeChengJiNum = 1,},
+[3] = {JinShiZiGoodsID = 80298,SJMoHeGoodsID = 80381,JinDunGoodsID = 80338,RunHuaJiGoodsID = 80191,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = 80233,TiLianMoHeGoodsID = nil,JLMiaoShu1 = '获得男爵金十字胜利勋章×1',JLMiaoShu2 = '获得劣质升级魔盒×2',JLMiaoShu3 = '获得高级男爵金盾勇气勋章×1',JLMiaoShu4 = '获得劣质润滑剂×3',JLMiaoShu5 = '获得劣质宝石合成剂×2',JLMiaoShu6 = '获得低档土地契约×1',JLMiaoShu7 = nil,JLMiaoShu8 = nil,LJJLMoney = 10968,ZDJLMoney = 3285,XLYJLMoney = 1700,FSJLGongXun = 34080,TFJLGongXun = 17080,XLYJLGongXun = 17040,LJJLSW = 13,LJFKDJLSW = 92,ZDJLSW = 8,ZDFKDJLSW = 54,FSJLSW = 8,FSFKDJLSW = 88,TFJLSW = 8,TFFKDJLSW = 88,ShengJiHeZiNum = 2,RunHuaJiNum = 3,BaoShiHeChengJiNum = 2,},
+[4] = {JinShiZiGoodsID = 80306,SJMoHeGoodsID = 782,JinDunGoodsID = 80342,RunHuaJiGoodsID = 80192,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = nil,TiLianMoHeGoodsID = 80405,JLMiaoShu1 = '获得子爵金十字胜利勋章×1',JLMiaoShu2 = '获得普通升级魔盒宝箱×1',JLMiaoShu3 = '获得子爵金盾勇气勋章×1',JLMiaoShu4 = '获得普通润滑剂×1',JLMiaoShu5 = '获得劣质宝石合成剂×3',JLMiaoShu6 = nil,JLMiaoShu7 = '获得普通提炼魔盒×1',JLMiaoShu8 = nil,LJJLMoney = 24792,ZDJLMoney = 4815,XLYJLMoney = 2400,FSJLGongXun = 82200,TFJLGongXun = 34000,XLYJLGongXun = 41100,LJJLSW = 52,LJFKDJLSW = 368,ZDJLSW = 16,ZDFKDJLSW = 108,FSJLSW = 16,FSFKDJLSW = 176,TFJLSW = 16,TFFKDJLSW = 176,ShengJiHeZiNum = 1,RunHuaJiNum = 1,BaoShiHeChengJiNum = 3,},
+[5] = {JinShiZiGoodsID = 80306,SJMoHeGoodsID = 782,JinDunGoodsID = 80346,RunHuaJiGoodsID = 80192,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = nil,TiLianMoHeGoodsID = 80405,JLMiaoShu1 = '获得子爵金十字胜利勋章×1',JLMiaoShu2 = '获得普通升级魔盒宝箱×1',JLMiaoShu3 = '获得高级子爵金盾勇气勋章×1',JLMiaoShu4 = '获得普通润滑剂×1',JLMiaoShu5 = '获得劣质宝石合成剂×3',JLMiaoShu6 = nil,JLMiaoShu7 = '获得普通提炼魔盒×1',JLMiaoShu8 = nil,LJJLMoney = 24792,ZDJLMoney = 7425,XLYJLMoney = 3700,FSJLGongXun = 94800,TFJLGongXun = 47800,XLYJLGongXun = 47400,LJJLSW = 52,LJFKDJLSW = 368,ZDJLSW = 22,ZDFKDJLSW = 148,FSJLSW = 22,FSFKDJLSW = 242,TFJLSW = 22,TFFKDJLSW = 242,ShengJiHeZiNum = 1,RunHuaJiNum = 1,BaoShiHeChengJiNum = 3,},
+[6] = {JinShiZiGoodsID = 80314,SJMoHeGoodsID = 782,JinDunGoodsID = 80350,RunHuaJiGoodsID = 80192,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = nil,TiLianMoHeGoodsID = 80405,JLMiaoShu1 = '获得伯爵金十字胜利勋章×1',JLMiaoShu2 = '获得普通升级魔盒宝箱×2',JLMiaoShu3 = '获得伯爵金盾勇气勋章×1',JLMiaoShu4 = '获得普通润滑剂×2',JLMiaoShu5 = '获得劣质宝石合成剂×3',JLMiaoShu6 = nil,JLMiaoShu7 = '获得普通提炼魔盒×1',JLMiaoShu8 = '获得普通润滑剂×2',LJJLMoney = 45226,ZDJLMoney = 10350,XLYJLMoney = 5000,FSJLGongXun = 170700,TFJLGongXun = 80700,XLYJLGongXun = 85350,LJJLSW = 110,LJFKDJLSW = 782,ZDJLSW = 34,ZDFKDJLSW = 229,FSJLSW = 34,FSFKDJLSW = 374,TFJLSW = 34,TFFKDJLSW = 374,ShengJiHeZiNum = 2,RunHuaJiNum = 2,BaoShiHeChengJiNum = 3,},
+[7] = {JinShiZiGoodsID = 80314,SJMoHeGoodsID = 782,JinDunGoodsID = 80354,RunHuaJiGoodsID = 80192,BaoShiHeChengGoodsID = 80181,TuDiQiYueGoodsID = nil,TiLianMoHeGoodsID = 80405,JLMiaoShu1 = '获得伯爵金十字胜利勋章×1',JLMiaoShu2 = '获得普通升级魔盒宝箱×2',JLMiaoShu3 = '获得高级伯爵金盾勇气勋章×1',JLMiaoShu4 = '获得普通润滑剂×3',JLMiaoShu5 = '获得劣质宝石合成剂×3',JLMiaoShu6 = nil,JLMiaoShu7 = '获得普通提炼魔盒×1',JLMiaoShu8 = '获得普通润滑剂×2',LJJLMoney = 45226,ZDJLMoney = 13545,XLYJLMoney = 7000,FSJLGongXun = 212000,TFJLGongXun = 102000,XLYJLGongXun = 106000,LJJLSW = 110,LJFKDJLSW = 782,ZDJLSW = 40,ZDFKDJLSW = 270,FSJLSW = 40,FSFKDJLSW = 440,TFJLSW = 40,TFFKDJLSW = 440,ShengJiHeZiNum = 2,RunHuaJiNum = 3,BaoShiHeChengJiNum = 3,},
+--更高爵位未开放
+}
+
+--图标ID
+MoneyID = 80081
+GongXunID = 80456
+LJSWID = 80514
+ZDSWID = 80512
+FSSWID = 80515
+TFSWID = 80513
+FKDSWID = 80516
+
+function MeiRiRW_Title()
+--	local ActorID = API_RequestGetActorID()
+--	local DJ = API_GetActorPeerageLevel(ActorID)
+--	if DJ < 8 then
+--		local LJCiShu = API_VarDataGetNumber(ActorID,1,LaJuZhanFuBen_LingjiangNum)
+--		local ZDCiShu = API_VarDataGetNumber(ActorID,1,DuiKangFuBen_LingjiangNum)
+--		local FSCiShu = API_VarDataGetNumber(ActorID,1,FangShouFuBen_LingjiangNum)
+--		local TFCiShu = API_VarDataGetNumber(ActorID,1,TaFangFuBen_LingjiangNum)
+--		local XLYCiShu = API_VarDataGetNumber(ActorID,1,XunLianYingFuBen_LingjiangNum)
+--		local LJLastTime = API_VarDataGetNumber(ActorID,1,LaJuZhanFuBen_LastTime)
+--		local ZDLastTime = API_VarDataGetNumber(ActorID,1,DuiKangFuBen_LastTime)
+--		local FSLastTime = API_VarDataGetNumber(ActorID,1,FangShouFuBen_LastTime)
+--		local TFLastTime = API_VarDataGetNumber(ActorID,1,TaFangFuBen_LastTime)
+--		local XLYLastTime = API_VarDataGetNumber(ActorID,1,XunLianYingFuBen_LastTime)
+--		local ShenShangMoney = API_ActorGetPropNum(ActorID,PD_PROP_MONEY_HOLD)
+--		local FKDDangQianSW = API_VarDataGetNumber(ActorID,1,GLOBAL_FuKongDaoShengWang)
+--		local LJDangQianSW = API_VarDataGetNumber(ActorID,1,GLOBAL_LaJuZhanShengWang)
+--		local ZDDangQianSW = API_VarDataGetNumber(ActorID,1,GLOBAL_ZhengDuoShengWang)
+--		local FSDangQianSW = API_VarDataGetNumber(ActorID,1,GLOBAL_FangShouShengWang)
+--		local TFDangQianSW = API_VarDataGetNumber(ActorID,1,GLOBAL_TaFangShengWang)
+--		local GoodsIDTable = MeiRiRW_JiangLiTable[DJ]
+--		local GoodsID1 = GoodsIDTable.JinShiZiGoodsID
+--		local GoodsID2 = GoodsIDTable.SJMoHeGoodsID
+--		local GoodsID3 = GoodsIDTable.JinDunGoodsID
+--		local GoodsID4 = GoodsIDTable.RunHuaJiGoodsID
+--		local GoodsID5 = GoodsIDTable.BaoShiHeChengGoodsID
+--		local GoodsID6 = GoodsIDTable.TuDiQiYueGoodsID
+--		local GoodsID7 = GoodsIDTable.TiLianMoHeGoodsID
+--		local JL1 = GoodsIDTable.JLMiaoShu1
+--		local JL2 = GoodsIDTable.JLMiaoShu2
+--		local JL3 = GoodsIDTable.JLMiaoShu3
+--		local JL4 = GoodsIDTable.JLMiaoShu4
+--		local JL5 = GoodsIDTable.JLMiaoShu5
+--		local JL6 = GoodsIDTable.JLMiaoShu6
+--		local JL7 = GoodsIDTable.JLMiaoShu7
+--		local JL8 = GoodsIDTable.JLMiaoShu8
+--		local LJMoney = GoodsIDTable.LJJLMoney
+--		local ZDMoney = GoodsIDTable.ZDJLMoney
+--		local XLYMoney = GoodsIDTable.XLYJLMoney
+--		local FSGongXun = GoodsIDTable.FSJLGongXun
+--		local TFGongXun = GoodsIDTable.TFJLGongXun
+--		local XLYGongXun = GoodsIDTable.XLYJLGongXun
+--		local LJJiangLiSW = GoodsIDTable.LJJLSW
+--		local LJFKDJiangLiSW = GoodsIDTable.LJFKDJLSW
+--		local ZDJiangLiSW = GoodsIDTable.ZDJLSW
+--		local ZDFKDJiangLiSW = GoodsIDTable.ZDFKDJLSW
+--		local FSJiangLiSW = GoodsIDTable.FSJLSW
+--		local FSFKDJiangLiSW = GoodsIDTable.FSFKDJLSW
+--		local TFJiangLiSW = GoodsIDTable.TFJLSW
+--		local TFFKDJiangLiSW = GoodsIDTable.TFFKDJLSW
+--		local SJHZNum = GoodsIDTable.ShengJiHeZiNum
+--		local RHJNum = GoodsIDTable.RunHuaJiNum
+--		local BSHCJNum = GoodsIDTable.BaoShiHeChengJiNum
+--		local SelectItem = API_RequestGetNumber(1)
+--		if SelectItem == 2 then
+--			API_ResponseWrite('<text>你当前爵位赢得三次拉锯浮空岛的胜利后可来领取：</text><br><br>')
+--			API_ResponseWrite('<img srcgd="'..GoodsID2..'" tipgd="'..GoodsID2..'"><text>×'..SJHZNum..'</text>')
+--			API_ResponseWrite('<img srcgd="'..GoodsID1..'" tipgd="'..GoodsID1..'"><text>×1</text>')
+--			API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..LJMoney..'</text>')
+--			API_ResponseWrite('<img srcgd="'..LJSWID..'" tipgd="'..LJSWID..'"><text>×'..LJJiangLiSW..'</text>')
+--			API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..LJFKDJiangLiSW..'</text><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=7">领取奖励</a><br><br>')
+--			API_ResponseWrite('<a>知道了</a>')
+--		elseif SelectItem == 3 then
+--			API_ResponseWrite('<text>你当前爵位赢得三次争夺浮空岛的胜利后可来领取：</text><br><br>')
+--				if  DJ >= 1 and DJ <= 3 then
+--					API_ResponseWrite('<img srcgd="'..GoodsID6..'" tipgd="'..GoodsID6..'"><text>×1</text>')
+--				end
+--			API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..ZDMoney..'</text>')
+--			API_ResponseWrite('<img srcgd="'..ZDSWID..'" tipgd="'..ZDSWID..'"><text>×'..ZDJiangLiSW..'</text>')
+--			API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..ZDFKDJiangLiSW..'</text><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=8">领取奖励</a><br><br>')
+--			API_ResponseWrite('<a>知道了</a>')
+--		elseif SelectItem == 4 then
+--			API_ResponseWrite('<text>你当前爵位在防守浮空岛抵御三次怪物进攻后可来领取：（每次进入防守浮空岛防守至20轮即算一次）</text><br><br>')
+--			API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×'..RHJNum..'</text>')
+--			API_ResponseWrite('<img srcgd="'..GoodsID3..'" tipgd="'..GoodsID3..'"><text>×1</text>')
+--			API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..FSGongXun..'</text>')
+--			API_ResponseWrite('<img srcgd="'..FSSWID..'" tipgd="'..FSSWID..'"><text>×'..FSJiangLiSW..'</text>')
+--			API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..FSFKDJiangLiSW..'</text><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=9">领取奖励</a><br><br>')
+--			API_ResponseWrite('<a>知道了</a>')
+--		elseif SelectItem == 5 then
+--			API_ResponseWrite('<text>你当前爵位在塔防浮空岛抵御一次怪物进攻后可来领取：（每次进入塔防浮空岛抵御20轮进攻即算一次）</text><br><br>')
+--			API_ResponseWrite('<img srcgd="'..GoodsID5..'" tipgd="'..GoodsID5..'"><text>×'..BSHCJNum..'</text>')
+--				if DJ >= 4 and DJ <= 7 then
+--					API_ResponseWrite('<img srcgd="'..GoodsID7..'" tipgd="'..GoodsID7..'"><text>×1</text>')
+--				end
+--			API_ResponseWrite('<img srcgd="'..GoodsID3..'" tipgd="'..GoodsID3..'"><text>×1</text>')
+--			API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..TFGongXun..'</text>')
+--			API_ResponseWrite('<img srcgd="'..TFSWID..'" tipgd="'..TFSWID..'"><text>×'..TFJiangLiSW..'</text>')
+--			API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..TFFKDJiangLiSW..'</text><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=10">领取奖励</a><br><br>')
+--			API_ResponseWrite('<a>知道了</a>')
+--		elseif SelectItem == 6 then
+--			if DJ ~= 1 then
+--				API_ResponseWrite('<text>你当前爵位去训练营浮空岛战斗到至少第三关后可来领取：</text><br><br>')
+--					if DJ == 4 or DJ == 5 then
+--						API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×1</text>')
+--					elseif DJ == 6 or DJ == 7 then
+--						API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×2</text>')
+--					end
+--				API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..XLYMoney..'</text>')
+--				API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..XLYGongXun..'</text><br><br>')
+--				API_ResponseWrite('<a href="MeiRiRW_Title?1=11">领取奖励</a><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			else
+--				API_ResponseWrite('<text>你现在的爵位还不能去训练营吧，成为男爵后再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		--拉锯
+--		elseif SelectItem == 7 then
+--			local KongJian = API_ActorCanAddGoods(ActorID,GoodsID1,1,3,0)
+--			local year,month,day,hour,min,sec,wday = PublicFun_time()
+--			local NowTime = year * 10000 + month * 100 + day
+--			local LastTime = API_VarDataGetNumber(ActorID,1,LJLingJiangTime)
+--			LastTime = math.mod(LastTime,100000000)
+--			local LYear = math.floor(LastTime/10000)
+--			local LMonthDay = math.mod(LastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				API_VarDataSetNumber(ActorID,1,LJLingJiangTime,0)
+--			end
+--			local LJLastTime = API_VarDataGetNumber(ActorID,1,LaJuZhanFuBen_LastTime)
+--			LJLastTime = math.mod(LJLastTime,100000000)
+--			local LYear = math.floor(LJLastTime/10000)
+--			local LMonthDay = math.mod(LJLastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				LJCiShu = 0
+--			end
+--			local LJLingJiangCiShu = API_VarDataGetNumber(ActorID,1,LJLingJiangTime)
+--			if LJLingJiangCiShu == 0 then
+--				if NowTime - LJLastTime == 0 and LJCiShu >= 3 then
+--					if KongJian ~= -1 and API_ActorCanAddGoods(ActorID,GoodsID2,SJHZNum,0,KongJian) ~= -1 then
+--						if LJMoney + ShenShangMoney <= 5000000 then
+--							API_VarDataSetNumber(ActorID,1,LJLingJiangTime,NowTime)
+--							API_TaskAcceptLogRemove(ActorID,MeiRiRWTaskIDLJ)
+--							API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--							API_ResponseWrite('<img srcgd="'..GoodsID2..'" tipgd="'..GoodsID2..'"><text>×'..SJHZNum..'</text>')
+--							API_ResponseWrite('<img srcgd="'..GoodsID1..'" tipgd="'..GoodsID1..'"><text>×1</text>')
+--							API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..LJMoney..'</text>')
+--							API_ResponseWrite('<img srcgd="'..LJSWID..'" tipgd="'..LJSWID..'"><text>×'..LJJiangLiSW..'</text>')
+--							API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..LJFKDJiangLiSW..'</text><br><br>')
+--							API_AddActorGoods(ActorID,GoodsID1,1,'金十字')
+--							API_ActorAddMoney(ActorID,LJMoney,0,'钱')
+--							API_AddActorGoods(ActorID,GoodsID2,SJHZNum,'升级盒子')
+--							local LJSW = LJDangQianSW + LJJiangLiSW
+--							local LJFKDSW = FKDDangQianSW + LJFKDJiangLiSW
+--							API_VarDataSetNumber(ActorID,1,GLOBAL_LaJuZhanShengWang,LJSW)
+--							API_VarDataSetNumber(ActorID,1,GLOBAL_FuKongDaoShengWang,LJFKDSW)
+--							API_ActorSendMsg(ActorID,9,JL1)
+--							API_ActorSendMsg(ActorID,9,'获得'..LJMoney..'金币')
+--							API_ActorSendMsg(ActorID,9,JL2)
+--							API_ActorSendMsg(ActorID,9,'获得'..LJFKDJiangLiSW..'浮空岛声望')
+--							API_ActorSendMsg(ActorID,9,'获得'..LJJiangLiSW..'拉锯声望')
+--							API_ResponseWrite('<a>好的</a>')
+--						else
+--							API_ResponseWrite('<text>你身上的钱太多啦，去存掉些再来领奖励吧。</text><br><br>')
+--							API_ResponseWrite('<a>好的</a>')
+--						end
+--					else
+--						API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--						API_ResponseWrite('<a>好的</a>')
+--					end
+--				else			
+--					API_ResponseWrite('<text>你还没有完成三次拉锯呢，奖励只给努力战斗过的人哦。</text><br><br>')
+--					API_ResponseWrite('<a>知道了</a>')
+--				end
+--			else
+--				API_ResponseWrite('<text>你今天已经领过该项奖励了，明天再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		--争夺
+--		elseif SelectItem == 8 then
+--			local year,month,day,hour,min,sec,wday = PublicFun_time()
+--			local NowTime = year * 10000 + month * 100 + day
+--			local LastTime = API_VarDataGetNumber(ActorID,1,ZDLingJiangTime)
+--			LastTime = math.mod(LastTime,100000000)
+--			local LYear = math.floor(LastTime/10000)
+--			local LMonthDay = math.mod(LastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				API_VarDataSetNumber(ActorID,1,ZDLingJiangTime,0)
+--			end
+--			local ZDLastTime = API_VarDataGetNumber(ActorID,1,DuiKangFuBen_LastTime)
+--			ZDLastTime = math.mod(ZDLastTime,100000000)
+--			local LYear = math.floor(ZDLastTime/10000)
+--			local LMonthDay = math.mod(ZDLastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				ZDCiShu = 0
+--			end
+--			local ZDLingJiangCiShu = API_VarDataGetNumber(ActorID,1,ZDLingJiangTime)
+--			if ZDLingJiangCiShu == 0 then
+--				if NowTime - ZDLastTime == 0 and ZDCiShu >= 3 then
+--					if ZDMoney + ShenShangMoney <= 5000000 then
+--						if  DJ >= 1 and DJ <= 3 then
+--							if API_ActorCanAddGoods(ActorID,GoodsID6,1,0,0) ~= -1 then
+--								API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--								API_ResponseWrite('<img srcgd="'..GoodsID6..'" tipgd="'..GoodsID6..'"><text>×1</text>')
+--								API_AddActorGoods(ActorID,GoodsID6,1,'土地契约')
+--								API_ActorSendMsg(ActorID,9,JL6)
+--							else
+--								API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--								API_ResponseWrite('<a>好的</a>')
+--								return
+--							end
+--						elseif DJ >=4 and DJ <= 7 then
+--							API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--						end
+--						API_VarDataSetNumber(ActorID,1,ZDLingJiangTime,NowTime)
+--						API_TaskAcceptLogRemove(ActorID,MeiRiRWTaskIDZD)
+--						API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..ZDMoney..'</text>')
+--						API_ResponseWrite('<img srcgd="'..ZDSWID..'" tipgd="'..ZDSWID..'"><text>×'..ZDJiangLiSW..'</text>')
+--						API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..ZDFKDJiangLiSW..'</text><br><br>')
+--						API_ActorAddMoney(ActorID,ZDMoney,0,'钱')
+--						local ZDSW = ZDDangQianSW + ZDJiangLiSW
+--						local ZDFKDSW = FKDDangQianSW + ZDFKDJiangLiSW
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_ZhengDuoShengWang,ZDSW)
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_FuKongDaoShengWang,ZDFKDSW)
+--						API_ActorSendMsg(ActorID,9,'获得'..ZDMoney..'金币')
+--						API_ActorSendMsg(ActorID,9,'获得'..ZDFKDJiangLiSW..'浮空岛声望')
+--						API_ActorSendMsg(ActorID,9,'获得'..ZDJiangLiSW..'争夺声望')
+--						API_ResponseWrite('<a>好的</a>')
+--					else
+--						API_ResponseWrite('<text>你身上的钱太多啦，去存掉些再来领奖励吧。</text><br><br>')
+--						API_ResponseWrite('<a>好的</a>')
+--					end
+--				else			
+--					API_ResponseWrite('<text>你还没有完成三次争夺呢，奖励只给努力战斗过的人哦。</text><br><br>')
+--					API_ResponseWrite('<a>知道了</a>')
+--				end
+--			else
+--				API_ResponseWrite('<text>你今天已经领过该项奖励了，明天再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		--防守
+--		elseif SelectItem == 9 then
+--			local KongJian = API_ActorCanAddGoods(ActorID,GoodsID3,1,3,0)
+--			local year,month,day,hour,min,sec,wday = PublicFun_time()
+--			local NowTime = year * 10000 + month * 100 + day
+--			local LastTime = API_VarDataGetNumber(ActorID,1,FSLingJiangTime)
+--			LastTime = math.mod(LastTime,100000000)
+--			local LYear = math.floor(LastTime/10000)
+--			local LMonthDay = math.mod(LastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				API_VarDataSetNumber(ActorID,1,FSLingJiangTime,0)
+--			end
+--			local FSLastTime = API_VarDataGetNumber(ActorID,1,FangShouFuBen_LastTime)
+--			FSLastTime = math.mod(FSLastTime,100000000)
+--			local LYear = math.floor(FSLastTime/10000)
+--			local LMonthDay = math.mod(FSLastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				FSCiShu = 0
+--			end
+--			local FSLingJiangCiShu = API_VarDataGetNumber(ActorID,1,FSLingJiangTime)
+--			if FSLingJiangCiShu == 0 then
+--				if NowTime - FSLastTime == 0 and FSCiShu >= 3 then
+--					if KongJian ~= -1 and API_ActorCanAddGoods(ActorID,GoodsID4,RHJNum,0,KongJian) ~= -1 then
+--						API_VarDataSetNumber(ActorID,1,FSLingJiangTime,NowTime)
+--						API_TaskAcceptLogRemove(ActorID,MeiRiRWTaskIDFS)
+--						API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--						API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×'..RHJNum..'</text>')
+--						API_ResponseWrite('<img srcgd="'..GoodsID3..'" tipgd="'..GoodsID3..'"><text>×1</text>')
+--						API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..FSGongXun..'</text>')
+--						API_ResponseWrite('<img srcgd="'..FSSWID..'" tipgd="'..FSSWID..'"><text>×'..FSJiangLiSW..'</text>')
+--						API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..FSFKDJiangLiSW..'</text><br><br>')
+--						API_AddActorGoods(ActorID,GoodsID3,1,'金盾')
+--						API_ActorAddExp(ActorID,FSGongXun,0,'功勋')
+--						API_AddActorGoods(ActorID,GoodsID4,RHJNum,'润滑剂')
+--						local FSSW = FSDangQianSW + FSJiangLiSW
+--						local FSFKDSW = FKDDangQianSW + FSFKDJiangLiSW
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_FangShouShengWang,FSSW)
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_FuKongDaoShengWang,FSFKDSW)
+--						API_ActorSendMsg(ActorID,9,JL3)
+--						API_ActorSendMsg(ActorID,9,'获得'..FSGongXun..'功勋')
+--						API_ActorSendMsg(ActorID,9,JL4)
+--						API_ActorSendMsg(ActorID,9,'获得'..FSFKDJiangLiSW..'浮空岛声望')
+--						API_ActorSendMsg(ActorID,9,'获得'..FSJiangLiSW..'防守声望')
+--						API_ResponseWrite('<a>好的</a>')
+--					else
+--						API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--						API_ResponseWrite('<a>好的</a>')
+--					end
+--				else			
+--					API_ResponseWrite('<text>你还没有完成三次防守呢，只要你能防守到20轮就算你完成一次，加油吧。</text><br><br>')
+--					API_ResponseWrite('<a>知道了</a>')
+--				end
+--			else
+--				API_ResponseWrite('<text>你今天已经领过该项奖励了，明天再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		--塔防
+--		elseif SelectItem == 10 then
+--			local KongJian = API_ActorCanAddGoods(ActorID,GoodsID3,1,3,0)
+--			local year,month,day,hour,min,sec,wday = PublicFun_time()
+--			local NowTime = year * 10000 + month * 100 + day
+--			local LastTime = API_VarDataGetNumber(ActorID,1,TFLingJiangTime)
+--			LastTime = math.mod(LastTime,100000000)
+--			local LYear = math.floor(LastTime/10000)
+--			local LMonthDay = math.mod(LastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				API_VarDataSetNumber(ActorID,1,TFLingJiangTime,0)
+--			end
+--			local TFLastTime = API_VarDataGetNumber(ActorID,1,TaFangFuBen_LastTime)
+--			TFLastTime = math.mod(TFLastTime,100000000)
+--			local LYear = math.floor(TFLastTime/10000)
+--			local LMonthDay = math.mod(TFLastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				TFCiShu = 0
+--			end
+--			local TFLingJiangCiShu = API_VarDataGetNumber(ActorID,1,TFLingJiangTime)
+--			if TFLingJiangCiShu == 0 then
+--				if NowTime - TFLastTime == 0 and TFCiShu >= 1 then
+--					if KongJian ~= -1 and API_ActorCanAddGoods(ActorID,GoodsID5,BSHCJNum,0,KongJian) ~= -1 then
+--						if DJ >= 4 and DJ <= 7 then
+--							local KongJian2 = API_ActorCanAddGoods(ActorID,GoodsID5,BSHCJNum,0,KongJian)
+--							if KongJian2 ~= -1 and API_ActorCanAddGoods(ActorID,GoodsID7,1,0,KongJian2) ~= -1 then
+--								API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--								API_ResponseWrite('<img srcgd="'..GoodsID5..'" tipgd="'..GoodsID5..'"><text>×'..BSHCJNum..'</text>')
+--								API_ResponseWrite('<img srcgd="'..GoodsID7..'" tipgd="'..GoodsID7..'"><text>×1</text>')
+--								API_AddActorGoods(ActorID,GoodsID5,BSHCJNum,'宝石合成剂')
+--								API_AddActorGoods(ActorID,GoodsID7,1,'提炼魔盒')
+--								API_ActorSendMsg(ActorID,9,JL5)
+--								API_ActorSendMsg(ActorID,9,JL7)
+--							else
+--								API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--								API_ResponseWrite('<br><a>好的</a><br>')
+--								return
+--							end
+--						elseif DJ >=1 and DJ <= 3 then
+--							API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--							API_ResponseWrite('<img srcgd="'..GoodsID5..'" tipgd="'..GoodsID5..'"><text>×'..BSHCJNum..'</text>')
+--							API_AddActorGoods(ActorID,GoodsID5,BSHCJNum,'宝石合成剂')
+--							API_ActorSendMsg(ActorID,9,JL5)
+--						end
+--						API_VarDataSetNumber(ActorID,1,TFLingJiangTime,NowTime)
+--						API_TaskAcceptLogRemove(ActorID,MeiRiRWTaskIDTF)
+--						API_ResponseWrite('<img srcgd="'..GoodsID3..'" tipgd="'..GoodsID3..'"><text>×1</text>')
+--						API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..TFGongXun..'</text>')
+--						API_ResponseWrite('<img srcgd="'..TFSWID..'" tipgd="'..TFSWID..'"><text>×'..TFJiangLiSW..'</text>')
+--						API_ResponseWrite('<img srcgd="'..FKDSWID..'" tipgd="'..FKDSWID..'"><text>×'..TFFKDJiangLiSW..'</text><br><br>')
+--						API_AddActorGoods(ActorID,GoodsID3,1,'金盾')
+--						API_ActorAddExp(ActorID,TFGongXun,0,'功勋')
+--						local TFSW = TFDangQianSW + TFJiangLiSW
+--						local TFFKDSW = FKDDangQianSW + TFFKDJiangLiSW
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_TaFangShengWang,TFSW)
+--						API_VarDataSetNumber(ActorID,1,GLOBAL_FuKongDaoShengWang,TFFKDSW)
+--						API_ActorSendMsg(ActorID,9,JL3)
+--						API_ActorSendMsg(ActorID,9,'获得'..TFGongXun..'功勋')
+--						API_ActorSendMsg(ActorID,9,'获得'..TFFKDJiangLiSW..'浮空岛声望')
+--						API_ActorSendMsg(ActorID,9,'获得'..TFJiangLiSW..'塔防声望')
+--						API_ResponseWrite('<a>好的</a>')
+--					else
+--						API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--						API_ResponseWrite('<br><a>好的</a><br>')
+--					end
+--				else
+--					API_ResponseWrite('<text>你还没有完成一次塔防呢，只要你能抵御怪物20轮的进攻就算你完成一次，加油吧。</text><br><br>')
+--					API_ResponseWrite('<a>知道了</a>')
+--				end
+--			else
+--				API_ResponseWrite('<text>你今天已经领过该项奖励了，明天再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		--训练营
+--		elseif SelectItem == 11 then
+--			local year,month,day,hour,min,sec,wday = PublicFun_time()
+--			local NowTime = year * 10000 + month * 100 + day
+--			local LastTime = API_VarDataGetNumber(ActorID,1,XLYLingJiangTime)
+--			LastTime = math.mod(LastTime,100000000)
+--			local LYear = math.floor(LastTime/10000)
+--			local LMonthDay = math.mod(LastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				API_VarDataSetNumber(ActorID,1,XLYLingJiangTime,0)
+--			end
+--			local XLYLastTime = API_VarDataGetNumber(ActorID,1,XunLianYingFuBen_LastTime)
+--			XLYLastTime = math.mod(XLYLastTime,100000000)
+--			local LYear = math.floor(XLYLastTime/10000)
+--			local LMonthDay = math.mod(XLYLastTime,10000)
+--			local LMonth = math.floor(LMonthDay/100)
+--			local LDay = math.mod(LMonthDay,100)
+--			if year ~= LYear or month ~= LMonth or day ~= LDay then
+--				XLYCiShu = 0
+--			end
+--			local XLYLingJiangCiShu = API_VarDataGetNumber(ActorID,1,XLYLingJiangTime)
+--			if XLYLingJiangCiShu == 0 then
+--				if NowTime - XLYLastTime == 0 and XLYCiShu >= 1 then
+--					if XLYMoney + ShenShangMoney <= 5000000 then
+--						if DJ == 4 or DJ == 5 then
+--							if API_ActorCanAddGoods(ActorID,GoodsID4,1,0,0) ~= -1 then
+--								API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--								API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×1</text>')
+--								API_AddActorGoods(ActorID,GoodsID4,1,'润滑剂')
+--								API_ActorSendMsg(ActorID,9,JL4)
+--							else
+--								API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--								API_ResponseWrite('<a>好的</a>')
+--								return
+--								
+--							end
+--						elseif DJ == 6 or DJ == 7 then
+--							if API_ActorCanAddGoods(ActorID,GoodsID4,2,0,0) ~= -1 then
+--								API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--								API_ResponseWrite('<img srcgd="'..GoodsID4..'" tipgd="'..GoodsID4..'"><text>×2</text>')
+--								API_AddActorGoods(ActorID,GoodsID4,2,'润滑剂')
+--								API_ActorSendMsg(ActorID,9,JL8)
+--							else
+--								API_ResponseWrite('<text>你的背包空间不够哦，去清理下再来领奖励吧。</text><br><br>')
+--								API_ResponseWrite('<a>好的</a>')
+--								return
+--							end
+--						elseif DJ >= 1 and DJ <= 3 then
+--							API_ResponseWrite('<text>干的漂亮，这是你应得的奖励，继续努力吧！</text><br><br>')
+--						end
+--						API_VarDataSetNumber(ActorID,1,XLYLingJiangTime,NowTime)
+--						API_TaskAcceptLogRemove(ActorID,MeiRiRWTaskIDXLY)
+--						API_ResponseWrite('<img srcgd="'..MoneyID..'" tipgd="'..MoneyID..'"><text>×'..XLYMoney..'</text>')
+--						API_ResponseWrite('<img srcgd="'..GongXunID..'" tipgd="'..GongXunID..'"><text>×'..XLYGongXun..'</text><br><br>')
+--						API_ActorAddMoney(ActorID,XLYMoney,0,'钱')
+--						API_ActorAddExp(ActorID,XLYGongXun,0,'功勋')
+--						API_ActorSendMsg(ActorID,9,'获得'..XLYMoney..'金币')
+--						API_ActorSendMsg(ActorID,9,'获得'..XLYGongXun..'功勋')
+--						API_ResponseWrite('<a>好的</a>')
+--					else
+--						API_ResponseWrite('<text>你身上的钱太多啦，去存掉些再来领奖励吧。</text><br><br>')
+--						API_ResponseWrite('<a>好的</a>')
+--					end
+--				else
+--					API_ResponseWrite('<text>你还没有完成一次训练营呢，只要你能战斗到第三关就算你完成一次，加油吧。</text><br><br>')
+--					API_ResponseWrite('<a>知道了</a>')
+--				end
+--			else
+--				API_ResponseWrite('<text>你今天已经领过该项奖励了，明天再来吧。</text><br><br>')
+--				API_ResponseWrite('<a>知道了</a>')
+--			end
+--		else
+--			API_ResponseWrite('<text>点击下面各项可以查看、领取适合你当前爵位的奖励。</text><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=2">拉锯奖励</a>')
+--			API_ResponseWrite('<text>   </text>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=3">争夺奖励</a>')
+--			API_ResponseWrite('<text>     </text>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=4">防守奖励</a><br><br>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=5">塔防奖励</a>')
+--			API_ResponseWrite('<text>   </text>')
+--			API_ResponseWrite('<a href="MeiRiRW_Title?1=6">训练营奖励</a><br><br>')
+--			API_ResponseWrite('<a>关闭</a>')
+--			
+--		end
+--	else
+--		API_ResponseWrite('<text>暂时未开放候爵以上爵位的奖励。</text><br><br>')
+--		API_ResponseWrite('<a>知道了</a>')
+--	end
+	API_ResponseWrite('<text>暂时关闭。</text><br><br>')
+	API_ResponseWrite('<a>知道了</a>')
+end
+
+--可领取任务面版信息
+function MeiRiRW_KeLingQuTask()
+--	local ActorID = API_RequestGetActorID()
+--	local DJ = API_GetActorPeerageLevel(ActorID)
+--	if DJ < 8 then
+--		local ZhenYing = API_GetActorCamp(ActorID)
+--		local year,month,day,hour,min,sec,wday = PublicFun_time()
+--		local NowTime = year * 10000 + month * 100 + day
+--		local LastTime = API_VarDataGetNumber(ActorID,1,LJLingJiangTime)
+--		LastTime = math.mod(LastTime,100000000)
+--		local LYear = math.floor(LastTime/10000)
+--		local LMonthDay = math.mod(LastTime,10000)
+--		local LMonth = math.floor(LMonthDay/100)
+--		local LDay = math.mod(LMonthDay,100)
+--		local LJKeLingQu = 1
+--		if year ~= LYear or month ~= LMonth or day ~= LDay then
+--			LJKeLingQu = 0
+--		end
+--		local LastTime = API_VarDataGetNumber(ActorID,1,ZDLingJiangTime)
+--		LastTime = math.mod(LastTime,100000000)
+--		local LYear = math.floor(LastTime/10000)
+--		local LMonthDay = math.mod(LastTime,10000)
+--		local LMonth = math.floor(LMonthDay/100)
+--		local LDay = math.mod(LMonthDay,100)
+--		local ZDKeLingQu = 1
+--		if year ~= LYear or month ~= LMonth or day ~= LDay then
+--			ZDKeLingQu = 0
+--		end
+--		local LastTime = API_VarDataGetNumber(ActorID,1,FSLingJiangTime)
+--		LastTime = math.mod(LastTime,100000000)
+--		local LYear = math.floor(LastTime/10000)
+--		local LMonthDay = math.mod(LastTime,10000)
+--		local LMonth = math.floor(LMonthDay/100)
+--		local LDay = math.mod(LMonthDay,100)
+--		local FSKeLingQu = 1
+--		if year ~= LYear or month ~= LMonth or day ~= LDay then
+--			FSKeLingQu = 0
+--		end
+--		local LastTime = API_VarDataGetNumber(ActorID,1,TFLingJiangTime)
+--		LastTime = math.mod(LastTime,100000000)
+--		local LYear = math.floor(LastTime/10000)
+--		local LMonthDay = math.mod(LastTime,10000)
+--		local LMonth = math.floor(LMonthDay/100)
+--		local LDay = math.mod(LMonthDay,100)
+--		local TFKeLingQu =1
+--		if year ~= LYear or month ~= LMonth or day ~= LDay then
+--			TFKeLingQu = 0
+--		end
+--		local LastTime = API_VarDataGetNumber(ActorID,1,XLYLingJiangTime)
+--		LastTime = math.mod(LastTime,100000000)
+--		local LYear = math.floor(LastTime/10000)
+--		local LMonthDay = math.mod(LastTime,10000)
+--		local LMonth = math.floor(LMonthDay/100)
+--		local LDay = math.mod(LMonthDay,100)
+--		local XLYKeLingQu = 1
+--		if year ~= LYear or month ~= LMonth or day ~= LDay then
+--			XLYKeLingQu = 0
+--		end
+--		if ZhenYing == 0 and LJKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDLJ,'<Task NPCName="帝国总督" NpcID="11042" NPCPos="82,127,166,0" condition="完成三次拉锯" FinishNum="1">每日战斗表彰-拉锯</Task>')
+--		elseif ZhenYing == 1 and LJKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDLJ,'<Task NPCName="联邦总督" NpcID="11043" NPCPos="67,129,171,0" condition="完成三次拉锯" FinishNum="1">每日战斗表彰-拉锯</Task>')
+--		end
+--		if ZhenYing == 0 and ZDKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDZD,'<Task NPCName="帝国总督" NpcID="11042" NPCPos="82,127,166,0" condition="完成三次争夺" FinishNum="1">每日战斗表彰-争夺</Task>')
+--		elseif ZhenYing == 1 and ZDKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDZD,'<Task NPCName="联邦总督" NpcID="11043" NPCPos="67,129,171,0" condition="完成三次争夺" FinishNum="1">每日战斗表彰-争夺</Task>')
+--		end
+--		if ZhenYing == 0 and FSKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDFS,'<Task NPCName="帝国总督" NpcID="11042" NPCPos="82,127,166,0" condition="完成三次防守" FinishNum="1">每日战斗表彰-防守</Task>')
+--		elseif ZhenYing == 1 and FSKeLingQu ~= 1 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDFS,'<Task NPCName="联邦总督" NpcID="11043" NPCPos="67,129,171,0" condition="完成三次防守" FinishNum="1">每日战斗表彰-防守</Task>')
+--		end
+--		if ZhenYing == 0 and TFKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDTF,'<Task NPCName="帝国总督" NpcID="11042" NPCPos="82,127,166,0" condition="完成一次塔防" FinishNum="1">每日战斗表彰-塔防</Task>')
+--		elseif ZhenYing == 1 and TFKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDTF,'<Task NPCName="联邦总督" NpcID="11043" NPCPos="67,129,171,0" condition="完成一次塔防" FinishNum="1">每日战斗表彰-塔防</Task>')
+--		end
+--		if ZhenYing == 0 and XLYKeLingQu == 0 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDXLY,'<Task NPCName="帝国总督" NpcID="11042" NPCPos="82,127,166,0" condition="完成一次训练营" FinishNum="1">每日战斗表彰-训练营</Task>')
+--		elseif ZhenYing == 1 and XLYKeLingQu ~= 1 then
+--			API_TaskAcceptLogUpdate(ActorID,MeiRiRWTaskIDXLY,'<Task NPCName="联邦总督" NpcID="11043" NPCPos="67,129,171,0" condition="完成一次训练营" FinishNum="1">每日战斗表彰-训练营</Task>')
+--		end
+--	end
+end
