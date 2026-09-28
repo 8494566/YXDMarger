@@ -3,8 +3,9 @@ TML_Jinkela = 83113
 
 XinNian_Goods_Table2 = {
 	[1] = {
-                          {GoodsID=728,Point=0,Jinkela=120},
-                          {GoodsID=729,Point=0,Jinkela=150},
+                          {GoodsID=11721,Point=0,Jinkela=1},
+                          {GoodsID=11722,Point=0,Jinkela=1},
+                          {GoodsID=11723,Point=0,Jinkela=1},
                            {GoodsID=39744,Point=0,Jinkela=200},
                           {GoodsID=89147,Point=0,Jinkela=10},
                          {GoodsID=89142,Point=0,Jinkela=10},
