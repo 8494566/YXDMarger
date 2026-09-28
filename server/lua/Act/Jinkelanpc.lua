@@ -3,6 +3,18 @@ TML_Jinkela = 83113
 
 XinNian_Goods_Table2 = {
 	[1] = {
+                          {GoodsID=11708,Point=0,Jinkela=1},
+                          {GoodsID=11709,Point=0,Jinkela=1},
+                          {GoodsID=11710,Point=0,Jinkela=1},
+                          {GoodsID=11711,Point=0,Jinkela=1},
+                          {GoodsID=11712,Point=0,Jinkela=1},
+                          {GoodsID=11713,Point=0,Jinkela=1},
+                          {GoodsID=11714,Point=0,Jinkela=1},
+                          {GoodsID=11715,Point=0,Jinkela=1},
+                          {GoodsID=11716,Point=0,Jinkela=1},
+                          {GoodsID=11717,Point=0,Jinkela=1},
+                          {GoodsID=11718,Point=0,Jinkela=1},
+                          {GoodsID=11719,Point=0,Jinkela=1},
                           {GoodsID=11721,Point=0,Jinkela=1},
                           {GoodsID=11722,Point=0,Jinkela=1},
                           {GoodsID=11723,Point=0,Jinkela=1},
