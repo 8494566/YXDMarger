@@ -138,6 +138,10 @@ BossShuaXinBiao_Tp = {
 	[823083] = {Map=137, X=135, Y=166},
 	[823085] = {Map=107, X=119, Y=260},
 	[823081] = {Map=11,  X=60,  Y=73},
+	--宝箱争夺（每小时整点）
+	[12416] = {Map=101, X=451, Y=445},
+	[12417] = {Map=102, X=578, Y=559},
+	[12418] = {Map=111, X=423, Y=356},
 }
 
 BossShuaXinBiao_CD = {}
@@ -167,6 +171,10 @@ BossShuaXinBiao_Daily = {
 	{Name = '三巨头（英雄BOSS）',           Times = {{0,00},{13,00},{20,00}}, Mon = {823084,823082,823083}},
 	{Name = '死神（镜月3）',                 Times = {{21,00}}, Mon = {823085}},
 	{Name = '岛主的化身（五行空间）',         Times = {{23,05}}, Mon = {823081}},
+}
+
+BossShuaXinBiao_Hourly = {
+	{Name = '宝箱争夺', Mon = {12416,12417,12418}},
 }
 
 BossShuaXinBiao_World = {
@@ -280,6 +288,18 @@ function BossShuaXinBiao_Build(page)
 						W('<br><text size="14">　　　'..BossShuaXinBiao_MonName(mid)..BossShuaXinBiao_Pos(mid)..'</text>'..BossShuaXinBiao_Link(mid))
 					end
 				end
+			end
+		end
+
+		W('<br><br><text size="14" color="255,128,0">【每小时整点刷新】</text>')
+		local hourLeft = 3600 - math.mod(BossShuaXinBiao_GameSecOfDay(), 3600)
+		for i = 1, table.getn(BossShuaXinBiao_Hourly) do
+			local hh = BossShuaXinBiao_Hourly[i]
+			W('<br><text size="14">　· '..hh.Name..'（'..table.getn(hh.Mon)..'只） 每小时整点 </text>'
+				..'<text size="14" color="0,255,0">下次 剩余 '..BossShuaXinBiao_Fmt(hourLeft)..'</text>')
+			for j = 1, table.getn(hh.Mon) do
+				local mid = hh.Mon[j]
+				W('<br><text size="14">　　　'..BossShuaXinBiao_MonName(mid)..BossShuaXinBiao_Pos(mid)..'</text>'..BossShuaXinBiao_Link(mid))
 			end
 		end
 
