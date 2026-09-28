@@ -5,3 +5,4 @@
 - 2026-09-28 | B | 初始化仓库：`shared/scp`（144 个双端文件）、`server/lua`（Other/Act/NPC/Task/Main.lua）、`publish-static`、`tools` | — | 首次入库
 - 2026-09-28 | B | �˵��˲��ԣ���֤ push -> �Զ���ȡ -> ͬ�� -> �������� scp.txt | - | �����ύ
 - 2026-09-28 | B | SYSTEM �ƻ������Զ���ȡ��֤ | - | �����ύ2
+- 2026-09-28 | B | 修复 deploy.ps1：start.bat 的 pause 会让计划任务卡死；cmd /c 引号需双层；robocopy 排除 .gitkeep | 否 | 实测通过
