@@ -9,8 +9,8 @@
 BossShuaXinBiao_LvMaxBingXue = 25
 BossShuaXinBiao_LvMaxTaFu    = 25
 BossShuaXinBiao_CDSec        = 300
-BossShuaXinBiao_PageMax      = 4
-BossShuaXinBiao_VER          = '2026-09-28-split4p'   -- 版本标记
+BossShuaXinBiao_PageMax      = 5
+BossShuaXinBiao_VER          = '2026-09-28-split5p'   -- 版本标记
 
 function BossShuaXinBiao_Fmt(s)
 	if s == nil or s < 0 then s = 0 end
@@ -193,10 +193,12 @@ function BossShuaXinBiao_Build(page)
 		W('<br><br><text color="255,128,0">【轮换BOSS·八门】每30分钟一只</text>')
 		BossShuaXinBiao_WriteRotate(W, '八门', Lv)
 	elseif page == 2 then
-		W('<br><br><text color="255,128,0">【轮换BOSS·五行 / 冰雪】每30分钟一只</text>')
+		W('<br><br><text color="255,128,0">【轮换BOSS·五行】每30分钟一只</text>')
 		BossShuaXinBiao_WriteRotate(W, '五行', Lv)
-		BossShuaXinBiao_WriteRotate(W, '冰雪', Lv)
 	elseif page == 3 then
+		W('<br><br><text color="255,128,0">【轮换BOSS·冰雪】每30分钟一只</text>')
+		BossShuaXinBiao_WriteRotate(W, '冰雪', Lv)
+	elseif page == 4 then
 		W('<br><br><text color="255,128,0">【每日固定刷新】到点必刷</text>')
 		for i = 1, table.getn(BossShuaXinBiao_Daily) do
 			local d = BossShuaXinBiao_Daily[i]
@@ -246,7 +248,7 @@ function BossShuaXinBiao_Build(page)
 	end
 
 	W('<br><br><text color="200,200,200">（同只BOSS 5 分钟内只能传送一次；倒计时点【刷新】更新）</text><br>')
-	W('<a href="BossShuaXinBiao_Show?1=1">①八门</a> <a href="BossShuaXinBiao_Show?1=2">②五行冰雪</a> <a href="BossShuaXinBiao_Show?1=3">③每日</a> <a href="BossShuaXinBiao_Show?1=4">④世界地穴</a>')
+	W('<a href="BossShuaXinBiao_Show?1=1">①八门</a><a href="BossShuaXinBiao_Show?1=2">②五行</a><a href="BossShuaXinBiao_Show?1=3">③冰雪</a><a href="BossShuaXinBiao_Show?1=4">④每日</a><a href="BossShuaXinBiao_Show?1=5">⑤世界地穴</a>')
 	W('<a href="BossShuaXinBiao_Show?1='..page..'">刷新</a> <a href="SpringFestival_JuanZhou">返回</a> <a>关闭</a>')
 
 	local out = table.concat(L)
