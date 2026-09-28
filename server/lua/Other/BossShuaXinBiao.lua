@@ -147,7 +147,7 @@ BossShuaXinBiao_GroupNames = {'八门','五行','冰雪'}
 
 function BossShuaXinBiao_WriteRotate(W, gname, Lv)
 	if BossLunHuan_Table == nil or BossLunHuan_SlotSec == nil or BossLunHuan_SlotSec <= 0 then
-		W('<br>（轮换脚本未加载）')
+		W('<br><br><text size="14">（轮换脚本未加载）</text>')
 		return
 	end
 	local nowT = os.time()
@@ -164,7 +164,7 @@ function BossShuaXinBiao_WriteRotate(W, gname, Lv)
 	local n = table.getn(list)
 	local curIdx = math.mod(slot, n) + 1
 	if not BossShuaXinBiao_CanShow(list[1].Boss, Lv) then return end
-	W('<br><text color="255,255,0">'..gname..'</text>（每'..(slotSec/60)..'分钟一只）')
+	W('<br><text size="14" color="255,255,0">'..gname..'</text><text size="14">（每'..(slotSec / 60)..'分钟一只，正在刷的显示"已刷新"）</text>')
 	for k = 1, n do
 		local e = list[k]
 		local off = math.mod(k - curIdx, n)
@@ -172,7 +172,7 @@ function BossShuaXinBiao_WriteRotate(W, gname, Lv)
 		if off > 0 then waitSec = remainSec + (off - 1) * slotSec end
 		local cd
 		if waitSec <= 0 then cd = '已刷新' else cd = '剩余'..BossShuaXinBiao_Fmt(waitSec) end
-		W('<br>·'..BossShuaXinBiao_MonName(e.Boss)..'（'..e.Name..'）'..BossShuaXinBiao_Pos(e.Boss)..' <text color="0,255,0">'..cd..'</text>'..BossShuaXinBiao_Link(e.Boss))
+		W('<br><text size="14">　· '..BossShuaXinBiao_MonName(e.Boss)..'（'..e.Name..'）'..BossShuaXinBiao_Pos(e.Boss)..' </text><text size="14" color="0,255,0">'..cd..'</text>'..BossShuaXinBiao_Link(e.Boss))
 	end
 end
 
@@ -186,20 +186,20 @@ function BossShuaXinBiao_Build(page)
 
 	W('<name>BOSS刷新表</name>')
 	W('<win rect="80,200,830,420"></win>')
-	W('<br>游戏时间：<text color="255,255,0">'..BossShuaXinBiao_GameTime()..'</text><text color="200,200,200">（轮换按服务器时间 '..BossShuaXinBiao_ServerClock()..'）</text>')
-	W('<br>你的等级：<text color="0,255,255">'..Lv..'</text>　第 <text color="255,128,0">'..page..'</text> / '..BossShuaXinBiao_PageMax..' 页')
+	W('<br><text size="14">游戏时间：</text><text size="14" color="255,255,0">'..BossShuaXinBiao_GameTime()..'</text><text size="14" color="200,200,200">（轮换按服务器时间 '..BossShuaXinBiao_ServerClock()..'）</text>')
+	W('<text size="14">　你的等级：</text><text size="14" color="0,255,255">'..Lv..'</text><text size="14">　第 </text><text size="14" color="255,128,0">'..page..'</text><text size="14"> / '..BossShuaXinBiao_PageMax..' 页</text>')
 
 	if page == 1 then
-		W('<br><br><text color="255,128,0">【轮换BOSS·八门】每30分钟一只</text>')
+		W('<br><br><text size="14" color="255,128,0">【轮换BOSS·八门】</text>')
 		BossShuaXinBiao_WriteRotate(W, '八门', Lv)
 	elseif page == 2 then
-		W('<br><br><text color="255,128,0">【轮换BOSS·五行】每30分钟一只</text>')
+		W('<br><br><text size="14" color="255,128,0">【轮换BOSS·五行】</text>')
 		BossShuaXinBiao_WriteRotate(W, '五行', Lv)
 	elseif page == 3 then
-		W('<br><br><text color="255,128,0">【轮换BOSS·冰雪】每30分钟一只</text>')
+		W('<br><br><text size="14" color="255,128,0">【轮换BOSS·冰雪】</text>')
 		BossShuaXinBiao_WriteRotate(W, '冰雪', Lv)
 	elseif page == 4 then
-		W('<br><br><text color="255,128,0">【每日固定刷新】到点必刷</text>')
+		W('<br><br><text size="14" color="255,128,0">【每日固定刷新】到点必刷（按游戏时钟）</text>')
 		for i = 1, table.getn(BossShuaXinBiao_Daily) do
 			local d = BossShuaXinBiao_Daily[i]
 			if BossShuaXinBiao_CanShow(d.Mon[1], Lv) then
@@ -207,48 +207,48 @@ function BossShuaXinBiao_Build(page)
 				for j = 1, table.getn(d.Times) do
 					local sec = BossShuaXinBiao_NextDaily(d.Times[j][1], d.Times[j][2])
 					local tt = string.format('%02d:%02d', d.Times[j][1], d.Times[j][2])
-					if timeTxt ~= '' then timeTxt = timeTxt..'/' end
+					if timeTxt ~= '' then timeTxt = timeTxt..' / ' end
 					timeTxt = timeTxt..tt
 					if best == nil or sec < best then best = sec; bestTime = tt end
 				end
-				W('<br>·'..d.Name..'（'..table.getn(d.Mon)..'只）'..timeTxt..' <text color="0,255,0">下次 '..bestTime..' 剩余'..BossShuaXinBiao_Fmt(best)..'</text>')
+				W('<br><text size="14">　· '..d.Name..'（'..table.getn(d.Mon)..'只） 每天 '..timeTxt..' </text><text size="14" color="0,255,0">下次 '..bestTime..' 剩余'..BossShuaXinBiao_Fmt(best)..'</text>')
 				for j = 1, table.getn(d.Mon) do
 					local mid = d.Mon[j]
 					if BossShuaXinBiao_CanShow(mid, Lv) then
-						W('<br>　'..BossShuaXinBiao_MonName(mid)..BossShuaXinBiao_Pos(mid)..BossShuaXinBiao_Link(mid))
+						W('<br><text size="14">　　　'..BossShuaXinBiao_MonName(mid)..BossShuaXinBiao_Pos(mid)..'</text>'..BossShuaXinBiao_Link(mid))
 					end
 				end
 			end
 		end
 		local hourLeft = 3600 - math.mod(BossShuaXinBiao_GameSecOfDay(), 3600)
-		W('<br><br><text color="255,128,0">【每小时整点】</text>')
-		W('<br>·宝箱争夺（3只）每小时整点 <text color="0,255,0">剩余'..BossShuaXinBiao_Fmt(hourLeft)..'</text>')
+		W('<br><br><text size="14" color="255,128,0">【每小时整点】</text>')
+		W('<br><text size="14">　· 宝箱争夺（3只）每小时整点 </text><text size="14" color="0,255,0">剩余'..BossShuaXinBiao_Fmt(hourLeft)..'</text>')
 		local boxs = {12416,12417,12418}
 		for i = 1, table.getn(boxs) do
-			W('<br>　'..BossShuaXinBiao_MonName(boxs[i])..BossShuaXinBiao_Pos(boxs[i])..BossShuaXinBiao_Link(boxs[i]))
+			W('<br><text size="14">　　　'..BossShuaXinBiao_MonName(boxs[i])..BossShuaXinBiao_Pos(boxs[i])..'</text>'..BossShuaXinBiao_Link(boxs[i]))
 		end
 	else
-		W('<br><br><text color="255,128,0">【世界BOSS】被击杀后按固定时长重刷</text>')
+		W('<br><br><text size="14" color="255,128,0">【世界BOSS】被击杀后按固定时长重刷</text>')
 		for i = 1, table.getn(BossShuaXinBiao_World) do
 			local kk = BossShuaXinBiao_World[i]
 			for j = 1, table.getn(kk.Mon) do
 				local mid = kk.Mon[j]
 				if BossShuaXinBiao_CanShow(mid, Lv) then
-					W('<br>·'..BossShuaXinBiao_MonName(mid)..'（'..kk.Name..'）'..BossShuaXinBiao_Pos(mid)..' <text color="255,0,255">'..kk.Rule..'</text>'..BossShuaXinBiao_Link(mid))
+					W('<br><text size="14">　· '..BossShuaXinBiao_MonName(mid)..'（'..kk.Name..'）'..BossShuaXinBiao_Pos(mid)..' </text><text size="14" color="255,0,255">'..kk.Rule..'</text>'..BossShuaXinBiao_Link(mid))
 				end
 			end
 		end
-		W('<br><br><text color="255,128,0">【随机地穴】地图随机出现"门"，需组队进入</text>')
+		W('<br><br><text size="14" color="255,128,0">【随机地穴】地图随机出现"门"，需组队进入</text>')
 		for i = 1, table.getn(BossShuaXinBiao_Cave) do
 			local c = BossShuaXinBiao_Cave[i]
 			if c.LvMax == nil or Lv <= c.LvMax then
-				W('<br>·'..BossShuaXinBiao_MonName(c.Boss)..'（'..c.Name..'）'..c.Where..'<text color="255,0,255"> '..c.Rule..'</text>'..BossShuaXinBiao_Link(c.Boss))
+				W('<br><text size="14">　· '..BossShuaXinBiao_MonName(c.Boss)..'（'..c.Name..'）</text><text size="14" color="200,200,200">'..c.Where..'</text><text size="14" color="255,0,255"> '..c.Rule..'</text>'..BossShuaXinBiao_Link(c.Boss))
 			end
 		end
 	end
 
-	W('<br><br><text color="200,200,200">（同只BOSS 5 分钟内只能传送一次；倒计时点【刷新】更新）</text><br>')
-	W('<a href="BossShuaXinBiao_Show?1=1">①八门</a><a href="BossShuaXinBiao_Show?1=2">②五行</a><a href="BossShuaXinBiao_Show?1=3">③冰雪</a><a href="BossShuaXinBiao_Show?1=4">④每日</a><a href="BossShuaXinBiao_Show?1=5">⑤世界地穴</a>')
+	W('<br><br><text size="14" color="200,200,200">（同一只BOSS '..(BossShuaXinBiao_CDSec / 60)..' 分钟内只能传送一次；倒计时点【刷新】更新）</text><br>')
+	W('<a href="BossShuaXinBiao_Show?1=1">①八门</a> <text size="14"> </text><a href="BossShuaXinBiao_Show?1=2">②五行</a> <text size="14"> </text><a href="BossShuaXinBiao_Show?1=3">③冰雪</a> <text size="14"> </text><a href="BossShuaXinBiao_Show?1=4">④每日</a> <text size="14"> </text><a href="BossShuaXinBiao_Show?1=5">⑤世界/地穴</a>')
 	W('<a href="BossShuaXinBiao_Show?1='..page..'">刷新</a> <a href="SpringFestival_JuanZhou">返回</a> <a>关闭</a>')
 
 	local out = table.concat(L)
