@@ -136,6 +136,8 @@ BossShuaXinBiao_Tp = {
 	[823084] = {Map=137, X=128, Y=172},
 	[823082] = {Map=137, X=128, Y=167},
 	[823083] = {Map=137, X=135, Y=166},
+	[823085] = {Map=107, X=119, Y=260},
+	[823081] = {Map=11,  X=60,  Y=73},
 }
 
 BossShuaXinBiao_CD = {}
@@ -163,6 +165,8 @@ BossShuaXinBiao_Daily = {
 	{Name = '年兽王',                     Times = {{19,00}}, Mon = {730603}},
 	{Name = '天空城变异凶兽',             Times = {{20,30}}, Mon = {944065}},
 	{Name = '三巨头（英雄BOSS）',           Times = {{0,00},{13,00},{20,00}}, Mon = {823084,823082,823083}},
+	{Name = '死神（镜月3）',                 Times = {{21,00}}, Mon = {823085}},
+	{Name = '岛主的化身（五行空间）',         Times = {{23,05}}, Mon = {823081}},
 }
 
 BossShuaXinBiao_World = {
