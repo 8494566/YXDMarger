@@ -78,7 +78,7 @@ local QL4 = API_VarDataGetNumber(ActorID,1,21504)
 local QL5 = API_VarDataGetNumber(ActorID,1,21505)
 API_ResponseWrite('<name>   供奉神祇</name>')	
 API_ResponseWrite('<win rect="250,250,500,400"  move="1" alpha="200" balpha="200"></win>')
-API_ResponseWrite('<text color="255,255,255">说明：上交材料可以获得神祇的赐福，供奉道具为“神灵铜钱”和“金币”和“五星币”</text>')
+API_ResponseWrite('<text color="255,255,255">说明：上交材料可以获得神祇的赐福，供奉道具为“神灵铜钱”和“金币”和“古仙令”</text>')
 API_ResponseWrite('<br><text>      </text><br><br>')
 if QL1 == 0 then
 API_ResponseWrite('<goodsHolder name="100">')
@@ -399,7 +399,7 @@ end
 if LHGM_Table[GoodsID].limt == 0 then
 API_ResponseWrite('<br><br><text color="126,94,243">             升级所需要的材料  </text><br>')
 API_ResponseWrite('<br><br><text>     </text><img srcgd="83374" tipgd="83374"><text>10/'..API_ActorGetGoodsNum(ActorID,83374)..'</text>')
-API_ResponseWrite('<text>     </text><img srcgd="89304" tipgd="89304"><text>2000/'..API_ActorGetGoodsNum(ActorID,89304)..'</text><br>')
+API_ResponseWrite('<text>     </text><img srcgd="83000" tipgd="83000"><text>2000/'..API_ActorGetGoodsNum(ActorID,83000)..'</text><br>')
 API_ResponseWrite('<text>     </text><img srcgd="80410"><text>1000000/'..API_ActorGetPropNum(ActorID,156)..'</text><br>')
 API_ResponseWrite('<br><text>             </text>')
 API_ResponseWrite('<a href="Atiemu_UP?1='..GoodsID..'" color="0,255,0">升级供奉神祇装备</a>')
@@ -417,10 +417,10 @@ function Atiemu_UP()
 	API_ActorBroadcastMsg(-1,17,'['..API_GetActorName(ActorID)..']['..ActorID..']狗篮子都想搞事情？')
 	return 0
 	end
-	if API_ActorGetPropNum(ActorID,156) >= 1000000 and API_ActorGetGoodsNum(ActorID,83374) >= 10 and API_ActorGetGoodsNum(ActorID,89304) >= 2000 then
+	if API_ActorGetPropNum(ActorID,156) >= 1000000 and API_ActorGetGoodsNum(ActorID,83374) >= 10 and API_ActorGetGoodsNum(ActorID,83000) >= 2000 then
 	API_ActorAddMoney(ActorID,-1000000,0,'升级供奉神祇')
 	API_ActorRemoveGoods(ActorID,83374,10,'升级供奉神祇')
-	API_ActorRemoveGoods(ActorID,89304,2000,'升级供奉神祇')
+	API_ActorRemoveGoods(ActorID,83000,2000,'升级供奉神祇')
 	if math.random(100) < LHGM_Table[GoodsID].cgl then
 	API_ActorRemoveGoods(ActorID,GoodsID,1,'升级供奉神祇')
 	API_AddActorGoodsEx(ActorID,(GoodsID+1),1,3,'成功升级')
@@ -431,7 +431,7 @@ function Atiemu_UP()
 	return 0
 	end
 	else
-API_ActorSendMsg(ActorID,3,'金币不足100万、神灵铜钱不足10个或五星币不足1000个')
+API_ActorSendMsg(ActorID,3,'金币不足100万、神灵铜钱不足10个或古仙令不足2000个')
 	return 0
 	end
 	
