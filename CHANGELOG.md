@@ -9,3 +9,4 @@
 - 2026-09-28 | B | 新增全自动：同步后自动热更 changed 的服务端 Lua（hot_update.ps1 驱动服务器窗口「更新」按钮，含日志校验）；文档与 tools 同步 | 否 | 实测两轮通过
 - 2026-09-28 | B | 修复关键漏步：deploy.ps1 现在会把客户端工程复制到发布站 scp/（之前漏了 → 清单更新但发布站是旧文件 → 客户端无限断点续传）；并加入 res 图片同步 | 否 | 已修复现场
 - 2026-09-29 | B | 新增 lua_check.ps1 语法预检（拦 ",," 等必错）+ hot_update 失败自动回滚；修复 Jinkelanpc.lua 双逗号；deploy.ps1 修复 safe.directory 与发布站复制/res 改为 opt-in | 否 | 服务端已恢复
+- 2026-09-29 | B | 以服务端手改版为准：同步 shared/scp/AIInfo.res + monster03.cse（客户端/发布站已同步，清单 bb=cee5798ed54e）| 是 | 待服务端重载表
