@@ -1298,6 +1298,8 @@ function SpringFestival_JuanZhou()
 	API_ResponseWrite('<a href="DuShen_Title">  我是赌神</a><text>      </text>')
 	API_ResponseWrite('<a href="WZCB_Title">  古仙令兑换</a><text>      </text>')
 	API_ResponseWrite('<a href="GuXianLu_Title">  古仙路（单人副本）</a><text>      </text>')
+	API_ResponseWrite('<a href="SuperSs?1=2">  圣兽守护</a><text>      </text>')
+	API_ResponseWrite('<a href="GFSQ_HeiYe">  供奉神祇</a><text>      </text>')
 	API_ResponseWrite('<a>关闭</a><br>')
 end
 
