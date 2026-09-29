@@ -11,3 +11,4 @@
 - 2026-09-29 | B | 新增 lua_check.ps1 语法预检（拦 ",," 等必错）+ hot_update 失败自动回滚；修复 Jinkelanpc.lua 双逗号；deploy.ps1 修复 safe.directory 与发布站复制/res 改为 opt-in | 否 | 服务端已恢复
 - 2026-09-29 | B | 以服务端手改版为准：同步 shared/scp/AIInfo.res + monster03.cse（客户端/发布站已同步，清单 bb=cee5798ed54e）| 是 | 待服务端重载表
 - 2026-09-29 | B | 以服务端手改版为准：PetCards 宠物大图ID 列修正（38行）已加密并发布；4表同步
+- 2026-09-29 | B | PetCards：43 行 GroupPer 改为对应 monster03 的 Resid（名字一致的行）；8 行异常待确认
