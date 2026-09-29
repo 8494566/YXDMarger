@@ -14,3 +14,4 @@
 - 2026-09-29 | B | PetCards：43 行 GroupPer 改为对应 monster03 的 Resid（名字一致的行）；8 行异常待确认
 - 2026-09-29 | B | PetCards：回退卡0-51的 GroupPer（保留卡82+），删除卡9 行（NPCID 823009 与卡82 重复）
 - 2026-09-29 | B | 回退 Effect.res 到 A 之前版本：客户端装载 Effect.res 失败导致游戏进不去（A 版结构正常，疑客户端装载器限制）
+- 2026-09-29 | B | 修复圣兽守护 Effect.res：把 A 追加在脚本末尾的 505 个 Object 移入 `Object 基本属性和… = 1` 体内（使其归属 level 2，对上 Status2 的 Property=2；原先在 -54 组，ID 30093~30597 超范围致客户端装载失败）。用 res->scp/scp->res 路径
