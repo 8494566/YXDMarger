@@ -164,14 +164,33 @@ function BossShuaXinBiao_WriteRotate(W, gname, Lv)
 	local n = table.getn(list)
 	local curIdx = math.mod(slot, n) + 1
 	if not BossShuaXinBiao_CanShow(list[1].Boss, Lv) then return end
-	W('<br><text size="14" color="255,255,0">'..gname..'</text><text size="14">（每'..(slotSec / 60)..'分钟一只，正在刷的显示"已刷新"）</text>')
+	W('<br><text size="14" color="255,255,0">'..gname..'</text><text size="14">（每'..(slotSec / 60)..'分钟一只；轮换BOSS需玩家进入该地图后才刷出）</text>')
 	for k = 1, n do
 		local e = list[k]
 		local off = math.mod(k - curIdx, n)
-		local waitSec = 0
-		if off > 0 then waitSec = remainSec + (off - 1) * slotSec end
 		local cd
-		if waitSec <= 0 then cd = '已刷新' else cd = '剩余'..BossShuaXinBiao_Fmt(waitSec) end
+		if off > 0 then
+			cd = '剩余'..BossShuaXinBiao_Fmt(remainSec + (off - 1) * slotSec)
+		else
+			-- 当前档：真实检测该地图是否已刷出这只BOSS（避免没人进图时误报"已刷新"）
+			local spawned = false
+			if BossLunHuan_VarFid ~= nil then
+				local okM, MapID = pcall(API_GetRightMapID, e.MapID)
+				if okM and MapID ~= nil and MapID > 0 then
+					local okV, valid = pcall(API_MapIsValid, MapID)
+					if okV and valid then
+						local okF, fid = pcall(API_GetMapVarData, MapID, BossLunHuan_VarFid)
+						if okF and fid ~= nil and fid > 0 then
+							local okMid, mid = pcall(API_GetMonsterID, fid)
+							if okMid and mid ~= nil and mid > 0 then
+								spawned = true
+							end
+						end
+					end
+				end
+			end
+			if spawned then cd = '已刷新' else cd = '本轮（未刷出）' end
+		end
 		W('<br><text size="14">　· '..BossShuaXinBiao_MonName(e.Boss)..'（'..e.Name..'）'..BossShuaXinBiao_Pos(e.Boss)..' </text><text size="14" color="0,255,0">'..cd..'</text>'..BossShuaXinBiao_Link(e.Boss))
 	end
 end
