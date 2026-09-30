@@ -43,13 +43,17 @@ GLOBAL_BaoXiang_GoodsIDList={
 		KeyNum=2,
 		},
 		
---1档武器盾配方宝箱
+--天空的神奇盒子
 [730] = {
 		GoodList={
-					{ID=80048,Num=1,},
+					{ID=90400,Num=1,},
+					{ID=90410,Num=1,},
+					{ID=90420,Num=1,},
+					{ID=90430,Num=1,},
+					{ID=90440,Num=1,},
 					},
-		NeedKey=80454,
-		KeyNum=1,
+		NeedKey=82545,
+		KeyNum=50,
 		},
 		
 --1档饰品配方宝箱
