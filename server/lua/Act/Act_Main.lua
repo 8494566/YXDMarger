@@ -31,7 +31,7 @@ function ActMain_OnLogin(ActorID,TypeID,ServerID,OwnerID)
 		if  type(FunctionName) == 'string' then	
 			local Function = _G[FunctionName]
 			if type(Function) == 'function' then
-				Function()
+				Function(ActorID)
 			end
 		end
 	end 
@@ -47,7 +47,7 @@ function ActMain_OnLogout(ActorID)
 		if  type(FunctionName) == 'string' then	
 			local Function = _G[FunctionName]
 			if type(Function) == 'function' then
-				Function()
+				Function(ActorID)
 			end
 		end
 	end 
@@ -62,7 +62,7 @@ function ActMain_OnLoginMap(ActorID)
 		if  type(FunctionName) == 'string' then	
 			local Function = _G[FunctionName]
 			if type(Function) == 'function' then
-				Function()
+				Function(ActorID)
 			end
 		end
 	end 
@@ -77,7 +77,7 @@ function ActMain_OnLogoutMap(ActorID)
 		if  type(FunctionName) == 'string' then	
 			local Function = _G[FunctionName]
 			if type(Function) == 'function' then
-				Function()
+				Function(ActorID)
 			end
 		end
 	end 

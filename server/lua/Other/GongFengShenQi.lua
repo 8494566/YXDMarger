@@ -466,8 +466,9 @@ end
 
 
 --«–ÕººÏ≤‚…œbuff
-function GFSQ_OnLogin()
-local ActorID = API_RequestGetActorID()
+function GFSQ_OnLogin(ActorID)
+local ActorID = ActorID or API_RequestGetActorID()
+if ActorID == nil or ActorID <= 0 then return end
 if API_VarDataGetNumber(ActorID,1,21501) > 0  then
 API_AddActorEffectProp(ActorID,7,LHGM_Table[API_VarDataGetNumber(ActorID,1,21501)].zy)
 API_AddActorEffectProp(ActorID,8,LHGM_Table[API_VarDataGetNumber(ActorID,1,21501)].zy)

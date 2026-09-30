@@ -315,8 +315,9 @@ end
 	end
 end
 
-function ShengShou_Buffcallback()
-local ActorID = API_RequestGetActorID()
+function ShengShou_Buffcallback(ActorID)
+local ActorID = ActorID or API_RequestGetActorID()
+if ActorID == nil or ActorID <= 0 then return end
 local QLLvCNSJ2 = API_VarDataGetNumber(ActorID,1,12001) - math.floor(API_VarDataGetNumber(ActorID,1,12001)/10000) * -1 + 1
 QLStatusID = 2134000 + QLLvCNSJ2
 API_ActorAddStatus(ActorID,QLStatusID,-1)                  
