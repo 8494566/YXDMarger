@@ -439,6 +439,8 @@ end
 	
 	
 
+GLOBAL_ActMain_OnLoginFuncNameList = GLOBAL_ActMain_OnLoginFuncNameList or {}
+GLOBAL_ActMain_OnLoginMapFuncNameList = GLOBAL_ActMain_OnLoginMapFuncNameList or {}
 local OnLoginLoadOK = 0
 for i, v in pairs(GLOBAL_ActMain_OnLoginFuncNameList) do 
 	if GLOBAL_ActMain_OnLoginFuncNameList[i] == 'GFSQ_OnLogin' then
