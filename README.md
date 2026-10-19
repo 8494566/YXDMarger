@@ -12,8 +12,18 @@
 | `client/extra/` | `D:\YXDClient\Data\Scp` | 仅客户端有的文件（A 维护，可留空） |
 | `publish-static/` | `C:\ShareFiles` | 发布站小文件（`list.ini`、`start*.bat`、`一键发布.bat`） |
 | `tools/` | 仅参考 | `deploy.ps1`、`db_backup.ps1`、`make_junctions.ps1` |
+| `websites/` | `C:\RegApp` / `C:\PayApp` | 注册站、充值站、GM 后台源码与部署脚本 |
+| `sql/` | 数据库 | 订单表、账号授权、GM 物品目录、邮件/点券脚本 |
+| `docs/` | 仅参考 | 历次部署、维护、改文件、比对文档 |
 
 > `scp/`、`res/`、`*.exe`、`*.rcf`、`*.csv`、`*.scp` 不进仓库，见 `.gitignore`。
+
+## 换服务器 / 接手先看
+
+**完整迁移步骤、服务器快照、数据库还原、网站部署、验收清单：见 [`MIGRATION.md`](MIGRATION.md)。**
+
+网站细节：`websites/README.md`；数据库：`sql/README.md`。
+
 
 ## 编辑铁律（动手前必看）
 
